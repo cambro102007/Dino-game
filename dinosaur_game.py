@@ -68,9 +68,10 @@ def draw_game_over(final_score):
 def draw_high_score():
     text = font.render(f'High Score: {high_score}', True, BLACK)
     screen.blit(text, (600, 10))
-def generate_point_position(cactus_x, min_distance=100):
+
+def generate_point_position(cactus_x, cactus_width, min_distance=100):
     point_x = random.randint(WIDTH, WIDTH * 2)
-    while abs(point_x - cactus_x) < min_distance:
+    while abs(point_x - (cactus_x + cactus_width)) < min_distance:
         point_x = random.randint(WIDTH, WIDTH * 2)
     return point_x
 
@@ -78,7 +79,7 @@ def reset_game():
     global cactus_x, score, point_x
     cactus_x = WIDTH
     score = 0
-    point_x = random.randint(WIDTH, WIDTH * 2)
+    point_x = generate_point_position(cactus_x, scaled_cactus_width)
 
 def main():
     global dino_y, dino_vel_y, jump, cactus_x, score, point_x
@@ -133,7 +134,7 @@ def main():
                 score += 1
 
             if point_x < -point_img.get_width():
-                point_x = random.randint(WIDTH, WIDTH * 2)
+                point_x = generate_point_position(cactus_x, scaled_cactus_width)
 
         else:
             draw_game_over(score)
