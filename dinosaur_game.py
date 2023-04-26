@@ -78,7 +78,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not jump:
                     jump = True
-                    dino_vel_y = -25
+                    dino_vel_y = -20
             
             if game_over == True:
                 if event.type == pygame.KEYDOWN:
