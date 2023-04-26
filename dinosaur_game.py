@@ -13,12 +13,15 @@ pygame.display.set_caption('Dinosaur Game')
 
 dino_img = pygame.image.load('dino.png')
 cactus_img = pygame.image.load('cactus.png')
+point_img = pygame.image.load('point.png')
 
 scaled_dino_width, scaled_dino_height = 64, 64
 scaled_cactus_width, scaled_cactus_height = 32, 64
+scaled_point_width, scaled_point_height = 32, 32
 
 dino_img = pygame.transform.scale(dino_img, (scaled_dino_width, scaled_dino_height))
 cactus_img = pygame.transform.scale(cactus_img, (scaled_cactus_width, scaled_cactus_height))
+point_img = pygame.transform.scale(point_img, (scaled_point_width, scaled_point_height))
 
 dino_x, dino_y = 50, HEIGHT - dino_img.get_height()
 dino_vel_y = 0
@@ -26,6 +29,9 @@ jump = False
 
 cactus_x = WIDTH
 cactus_y = HEIGHT - cactus_img.get_height()
+
+point_x = random.randint(WIDTH, WIDTH * 2)
+point_y = HEIGHT - point_img.get_height()
 
 score = 0
 high_score = 0
@@ -36,6 +42,9 @@ def draw_dino():
 
 def draw_cactus():
     screen.blit(cactus_img, (cactus_x, cactus_y))
+
+def draw_point():
+    screen.blit(point_img, (point_x, point_y))
 
 def draw_score():
     text = font.render(f'Score: {score}', True, BLACK)
@@ -59,15 +68,20 @@ def draw_game_over(final_score):
 def draw_high_score():
     text = font.render(f'High Score: {high_score}', True, BLACK)
     screen.blit(text, (600, 10))
+def generate_point_position(cactus_x, min_distance=100):
+    point_x = random.randint(WIDTH, WIDTH * 2)
+    while abs(point_x - cactus_x) < min_distance:
+        point_x = random.randint(WIDTH, WIDTH * 2)
+    return point_x
 
 def reset_game():
-    global cactus_x, score, high_score
-    high_score = high_score
+    global cactus_x, score, point_x
     cactus_x = WIDTH
     score = 0
+    point_x = random.randint(WIDTH, WIDTH * 2)
 
 def main():
-    global dino_y, dino_vel_y, jump, cactus_x, score
+    global dino_y, dino_vel_y, jump, cactus_x, score, point_x
 
     clock = pygame.time.Clock()
     game_over = False
@@ -78,21 +92,22 @@ def main():
     while True:
         clock.tick(60)
         screen.fill(WHITE)
-        
+
         draw_dino()
         draw_cactus()
+        draw_point()
         draw_score()
         draw_high_score()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not jump:
                     jump = True
                     dino_vel_y = -20
-            
+
             if game_over == True:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -111,13 +126,14 @@ def main():
                     jump = False
 
             cactus_x -= 5
-                    
+            point_x -= 5
+
             if cactus_x < -cactus_img.get_width():
                 cactus_x = WIDTH
-                score += 1
+                score =+ 1
 
-            if score >= high_score:
-                high_score == score
+            if point_x < -point_img.get_width():
+                point_x = random.randint(WIDTH, WIDTH * 2)
 
         else:
             draw_game_over(score)
@@ -126,10 +142,14 @@ def main():
 
         dino_rect = pygame.Rect(dino_x, dino_y, dino_img.get_width(), dino_img.get_height())
         cactus_rect = pygame.Rect(cactus_x, cactus_y, cactus_img.get_width(), cactus_img.get_height())
+        point_rect = pygame.Rect(point_x, point_y, point_img.get_width(), point_img.get_height())
+
         if dino_rect.colliderect(cactus_rect):
             set_high_score(score)
             game_over = True
-
+        elif dino_rect.colliderect(point_rect):
+            score += 1
+            point_x = random.randint(WIDTH, WIDTH * 2)
 
 if __name__ == '__main__':
     main()
