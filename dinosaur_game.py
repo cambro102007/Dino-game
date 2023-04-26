@@ -130,7 +130,7 @@ def main():
 
             if cactus_x < -cactus_img.get_width():
                 cactus_x = WIDTH
-                score =+ 1
+                score += 1
 
             if point_x < -point_img.get_width():
                 point_x = random.randint(WIDTH, WIDTH * 2)
