@@ -68,6 +68,11 @@ def draw_game_over(final_score):
 def draw_high_score():
     text = font.render(f'High Score: {high_score}', True, BLACK)
     screen.blit(text, (600, 10))
+def generate_point_position(cactus_x, min_distance=100):
+    point_x = random.randint(WIDTH, WIDTH * 2)
+    while abs(point_x - cactus_x) < min_distance:
+        point_x = random.randint(WIDTH, WIDTH * 2)
+    return point_x
 
 def reset_game():
     global cactus_x, score, point_x
