@@ -58,7 +58,7 @@ def draw_game_over(final_score):
 
 def draw_high_score():
     text = font.render(f'High Score: {high_score}', True, BLACK)
-    screen.blit(text, (110, 10))
+    screen.blit(text, (600, 10))
 
 def reset_game():
     global cactus_x, score, high_score
