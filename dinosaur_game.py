@@ -65,43 +65,22 @@ def main():
     background.fill(WHITE)
 
     while True:
-        clock.tick(30)
+        clock.tick(60)
+        screen.fill(WHITE)
+        draw_dino()
+        draw_cactus()
+        draw_score()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return
-
-            if not game_over:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE and not jump:
-                        jump = True
-                        dino_vel_y = -15
-
-                if jump:
-                    dino_y += dino_vel_y
-                    dino_vel_y += 1
-                    if dino_y >= HEIGHT - dino_img.get_height():
-                        dino_y = HEIGHT - dino_img.get_height()
-                        jump = False
-
-                    cactus_x -= 5
-                    if cactus_x < -cactus_img.get_width():
-                        cactus_x = WIDTH
-                        score += 1
-
-                    if dino_x + dino_img.get_width() > cactus_x and \
-                            dino_x < cactus_x + cactus_img.get_width() and \
-                            dino_y + dino_img.get_height() > cactus_y:
-                        game_over = True
-
-                screen.blit(background, (0, 0))
-                draw_dino()
-                draw_cactus()
-                draw_score()
-
-            else:
-                draw_game_over(score)
+                
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and not jump:
+                    jump = True
+                    dino_vel_y = -25
+            
+            if game_over == True:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         reset_game()
@@ -110,7 +89,29 @@ def main():
                         jump = False
                         cactus_x = WIDTH
 
+        if not game_over:
+            if jump:
+                dino_y += dino_vel_y
+                dino_vel_y += 1
+                if dino_y >= HEIGHT - dino_img.get_height():
+                    dino_y = HEIGHT - dino_img.get_height()
+                    jump = False
+
+            cactus_x -= 5
+                    
+            if cactus_x < -cactus_img.get_width():
+                cactus_x = WIDTH
+                score += 1
+
+        else:
+            draw_game_over(score)
+
         pygame.display.update()
+
+        dino_rect = pygame.Rect(dino_x, dino_y, dino_img.get_width(), dino_img.get_height())
+        cactus_rect = pygame.Rect(cactus_x, cactus_y, cactus_img.get_width(), cactus_img.get_height())
+        if dino_rect.colliderect(cactus_rect):
+            game_over = True
 
 if __name__ == '__main__':
     main()
