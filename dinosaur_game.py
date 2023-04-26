@@ -28,6 +28,7 @@ cactus_x = WIDTH
 cactus_y = HEIGHT - cactus_img.get_height()
 
 score = 0
+high_score = 0
 font = pygame.font.Font(None, 36)
 
 def draw_dino():
@@ -40,6 +41,11 @@ def draw_score():
     text = font.render(f'Score: {score}', True, BLACK)
     screen.blit(text, (10, 10))
 
+def set_high_score(final_score):
+    global high_score
+    if final_score >= high_score:
+        high_score = final_score
+
 def draw_game_over(final_score):
     font_big = pygame.font.Font(None, 72)
     text_game_over = font_big.render('You Died', True, BLACK)
@@ -50,8 +56,13 @@ def draw_game_over(final_score):
     screen.blit(text_final_score, (WIDTH // 2 - text_final_score.get_width() // 2, HEIGHT // 2 - text_final_score.get_height() // 2))
     screen.blit(text_respawn, (WIDTH // 2 - text_respawn.get_width() // 2, HEIGHT * 2 // 3 - text_respawn.get_height() // 2))
 
+def draw_high_score():
+    text = font.render(f'High Score: {high_score}', True, BLACK)
+    screen.blit(text, (600, 10))
+
 def reset_game():
-    global cactus_x, score
+    global cactus_x, score, high_score
+    high_score = high_score
     cactus_x = WIDTH
     score = 0
 
@@ -67,9 +78,11 @@ def main():
     while True:
         clock.tick(60)
         screen.fill(WHITE)
+        
         draw_dino()
         draw_cactus()
         draw_score()
+        draw_high_score()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -103,6 +116,9 @@ def main():
                 cactus_x = WIDTH
                 score += 1
 
+            if score >= high_score:
+                high_score == score
+
         else:
             draw_game_over(score)
 
@@ -111,7 +127,9 @@ def main():
         dino_rect = pygame.Rect(dino_x, dino_y, dino_img.get_width(), dino_img.get_height())
         cactus_rect = pygame.Rect(cactus_x, cactus_y, cactus_img.get_width(), cactus_img.get_height())
         if dino_rect.colliderect(cactus_rect):
+            set_high_score(score)
             game_over = True
+
 
 if __name__ == '__main__':
     main()
