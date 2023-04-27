@@ -28,16 +28,18 @@ dino_frames = ['/res/images/man_running_1.png',
                '/res/images/man_running_2.png',
                '/res/images/man_running_3.png',
                '/res/images/man_running_4.png']
+dino_dead = pygame.image.load(path + '/res/images/man_dead_1.png')
 cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
 dino_img = pygame.image.load(path + '/res/images/man_running_1.png')
 
-scaled_dino_width, scaled_dino_height = 46, 64  #Left is width & right is height
+scaled_dino_width, scaled_dino_height = 84, 120  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
 scaled_point_width, scaled_point_height = 64, 32
 
 cactus_img = pygame.transform.scale(cactus_img, (scaled_cactus_width, scaled_cactus_height))
 point_img = pygame.transform.scale(point_img, (scaled_point_width, scaled_point_height))
+dino_dead = pygame.transform.scale(dino_dead, (scaled_dino_width, scaled_dino_height))
 
 dino_x, dino_y = 50, HEIGHT - scaled_dino_height
 dino_vel_y = 0
@@ -130,6 +132,9 @@ def save_highscore(highscore):
     f.write(highscore)
     f.close()
 
+def draw_dead_dino():
+    screen.blit(dino_dead, (dino_x, dino_y))
+
 def main():
     global dino_y, dino_x, dino_vel_y, jump, cactus_x, score, point_x, current_dino_frame, last_update
 
@@ -146,8 +151,6 @@ def main():
         screen.fill(WHITE)
         current_time = pygame.time.get_ticks()
         
-
-        draw_dino(current_dino_frame)
         draw_dino_nametag()
         draw_cactus()
         draw_point()
@@ -175,6 +178,7 @@ def main():
                         back_to_death_screen = shop_gui()
                         
         if not game_over:
+            draw_dino(current_dino_frame)
             if jump:
                 dino_y += dino_vel_y
                 dino_vel_y += 1
@@ -201,6 +205,7 @@ def main():
 
         else:
             draw_game_over(score)
+            draw_dead_dino()
 
         pygame.display.update()
 
