@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 from shop_dino import shop_gui
 
 pygame.init()
@@ -13,13 +14,15 @@ GREY = (114, 114, 114)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Dinosaur Game')
+path = os.path.dirname(os.path.abspath(__file__))
 
-pygame.mixer.music.load('Illegals in my Yard (animation).mp3')
+pygame.mixer.music.set_volume(0.05)
+pygame.mixer.music.load(path + './res/sounds/Illegals in my Yard (animation).mp3')
 pygame.mixer.music.play(-1)
 
-dino_img = pygame.image.load('dino.png')
-cactus_img = pygame.image.load('cactus.png')
-point_img = pygame.image.load('point.png')
+dino_img = pygame.image.load(path + './res/images/dino.png')
+cactus_img = pygame.image.load(path + './res/images/cactus.png')
+point_img = pygame.image.load(path + './res/images/point.png')
 
 scaled_dino_width, scaled_dino_height = 46, 64  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
@@ -42,6 +45,11 @@ point_y = HEIGHT - point_img.get_height()
 score = 0
 high_score = 0
 font = pygame.font.Font(None, 36)
+
+def draw_dino_nametag():
+    text_pos = dino_y - 30
+    text = font.render('Nigger', True, BLACK)
+    screen.blit(text, (dino_x, text_pos))
 
 def draw_dino():
     screen.blit(dino_img, (dino_x, dino_y))
@@ -74,7 +82,7 @@ def draw_game_over(final_score):
 
 def draw_high_score():
     text = font.render(f'High Score: {high_score}', True, BLACK)
-    screen.blit(text, (600, 10))
+    screen.blit(text, (525, 10))
 
 def generate_point_position(cactus_x, cactus_width, min_distance=100):
     point_x = random.randint(WIDTH, WIDTH * 2)
@@ -98,6 +106,7 @@ def main():
 
     clock = pygame.time.Clock()
     game_over = False
+    random_speed = 6
     back_to_death_screen = False  # Define back_to_death_screen here
 
     background = pygame.Surface(screen.get_size())
@@ -108,6 +117,7 @@ def main():
         screen.fill(WHITE)
 
         draw_dino()
+        draw_dino_nametag()
         draw_cactus()
         draw_point()
         draw_score()
@@ -143,15 +153,16 @@ def main():
                     dino_y = HEIGHT - dino_img.get_height()
                     jump = False
 
-            cactus_x -= 5
-            point_x -= 5
-
             if cactus_x < -cactus_img.get_width():
                 cactus_x = WIDTH
                 score += 1
+                random_speed = random.randint(5, 12)
 
             if point_x < -point_img.get_width():
                 point_x = generate_point_position(cactus_x, scaled_cactus_width)
+                
+            cactus_x -= random_speed
+            point_x -= random_speed
 
             else:
                 draw_game_over(score)
