@@ -144,7 +144,7 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not jump:
