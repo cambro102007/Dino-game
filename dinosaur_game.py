@@ -1,6 +1,7 @@
 import pygame
 import random
 import os
+from shop_dino import shop_gui
 
 pygame.init()
 pygame.mixer.init()
@@ -77,6 +78,7 @@ def draw_game_over(final_score):
     screen.blit(text_game_over, (WIDTH // 2 - text_game_over.get_width() // 2, HEIGHT // 3 - text_game_over.get_height() // 2))
     screen.blit(text_final_score, (WIDTH // 2 - text_final_score.get_width() // 2, HEIGHT // 2 - text_final_score.get_height() // 2))
     screen.blit(text_respawn, (WIDTH // 2 - text_respawn.get_width() // 2, HEIGHT * 2 // 3 - text_respawn.get_height() // 2))
+    draw_shop_button()
 
 def draw_high_score():
     text = font.render(f'High Score: {high_score}', True, BLACK)
@@ -94,12 +96,18 @@ def reset_game():
     score = 0
     point_x = generate_point_position(cactus_x, scaled_cactus_width)
 
+def draw_shop_button():
+    font_button = pygame.font.Font(None, 36)
+    text_button = font_button.render('Press S to Open Shop', True, BLACK)
+    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 60))
+
 def main():
     global dino_y, dino_vel_y, jump, cactus_x, score, point_x
 
     clock = pygame.time.Clock()
     game_over = False
     random_speed = 6
+    back_to_death_screen = False  # Define back_to_death_screen here
 
     background = pygame.Surface(screen.get_size())
     background.fill(WHITE)
@@ -124,8 +132,7 @@ def main():
                     jump = True
                     dino_vel_y = -20
 
-            if game_over == True:
-                if event.type == pygame.KEYDOWN:
+                if game_over == True:
                     if event.key == pygame.K_SPACE:
                         reset_game()
                         game_over = False
@@ -133,7 +140,12 @@ def main():
                         jump = False
                         cactus_x = WIDTH
 
-        if not game_over:
+                    if event.key == pygame.K_s:
+                        back_to_death_screen = shop_gui()
+                        
+        else:
+            game_over = back_to_death_screen
+
             if jump:
                 dino_y += dino_vel_y
                 dino_vel_y += 1
@@ -152,8 +164,8 @@ def main():
             cactus_x -= random_speed
             point_x -= random_speed
 
-        else:
-            draw_game_over(score)
+            else:
+                draw_game_over(score)
 
         pygame.display.update()
 
@@ -165,7 +177,7 @@ def main():
             set_high_score(score)
             game_over = True
         elif dino_rect.colliderect(point_rect):
-            score += 1
+            score += 1 
             point_x = random.randint(WIDTH, WIDTH * 2)
 
 if __name__ == '__main__':
