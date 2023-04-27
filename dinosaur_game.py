@@ -107,7 +107,7 @@ def main():
     clock = pygame.time.Clock()
     game_over = False
     random_speed = 6
-    back_to_death_screen = False  # Define back_to_death_screen here
+    back_to_death_screen = False 
 
     background = pygame.Surface(screen.get_size())
     background.fill(WHITE)
@@ -143,9 +143,7 @@ def main():
                     if event.key == pygame.K_s:
                         back_to_death_screen = shop_gui()
                         
-        else:
-            game_over = back_to_death_screen
-
+        if not game_over:
             if jump:
                 dino_y += dino_vel_y
                 dino_vel_y += 1
@@ -160,12 +158,12 @@ def main():
 
             if point_x < -point_img.get_width():
                 point_x = generate_point_position(cactus_x, scaled_cactus_width)
-                
+                    
             cactus_x -= random_speed
             point_x -= random_speed
 
-            else:
-                draw_game_over(score)
+        else:
+            draw_game_over(score)
 
         pygame.display.update()
 
