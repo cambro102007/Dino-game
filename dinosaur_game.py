@@ -17,12 +17,12 @@ pygame.display.set_caption('Dinosaur Game')
 path = os.path.dirname(os.path.abspath(__file__))
 
 pygame.mixer.music.set_volume(0.05)
-pygame.mixer.music.load(path + './res/sounds/Illegals in my Yard (animation).mp3')
+pygame.mixer.music.load(path + '/res/sounds/Illegals in my Yard (animation).mp3')
 pygame.mixer.music.play(-1)
 
-dino_img = pygame.image.load(path + './res/images/dino.png')
-cactus_img = pygame.image.load(path + './res/images/cactus.png')
-point_img = pygame.image.load(path + './res/images/point.png')
+dino_img = pygame.image.load(path + '/res/images/dino.png')
+cactus_img = pygame.image.load(path + '/res/images/cactus.png')
+point_img = pygame.image.load(path + '/res/images/point.png')
 
 scaled_dino_width, scaled_dino_height = 46, 64  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
