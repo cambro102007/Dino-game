@@ -2,7 +2,7 @@ import pygame
 
 pygame.init()
 
-WIDTH, HEIGHT = 800, 200
+WIDTH, HEIGHT = 1200, 400
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
