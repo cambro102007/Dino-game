@@ -39,12 +39,23 @@ jump = False
 cactus_x = WIDTH
 cactus_y = HEIGHT - cactus_img.get_height()
 
+played_before = os.stat(path + "./res/highscore.txt")
+
+if played_before.st_size == 0:
+    f = open(path + "./res/highscore.txt", "w")
+    f.write("0")
+    f.close()
+
 point_x = random.randint(WIDTH, WIDTH * 2)
 point_y = HEIGHT - point_img.get_height()
 
+high_score_file = open(path + "./res/highscore.txt")
+high_score = high_score_file.read()
+high_score_file.close()
+
 score = 0
-high_score = 0
 font = pygame.font.Font(None, 36)
+
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
@@ -66,8 +77,11 @@ def draw_score():
 
 def set_high_score(final_score):
     global high_score
-    if final_score >= high_score:
+    global high_score_int 
+    high_score_int = int(high_score)
+    if final_score >= high_score_int:
         high_score = final_score
+    save_highscore(high_score.__str__())
 
 def draw_game_over(final_score):
     font_big = pygame.font.Font(None, 72)
@@ -100,6 +114,11 @@ def draw_shop_button():
     font_button = pygame.font.Font(None, 36)
     text_button = font_button.render('Press S to Open Shop', True, BLACK)
     screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 60))
+    
+def save_highscore(highscore):
+    f = open(path + "./res/highscore.txt", "w")
+    f.write(highscore)
+    f.close()
 
 def main():
     global dino_y, dino_vel_y, jump, cactus_x, score, point_x
