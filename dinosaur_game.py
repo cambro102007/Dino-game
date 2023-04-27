@@ -17,12 +17,12 @@ pygame.display.set_caption('Dinosaur Game')
 path = os.path.dirname(os.path.abspath(__file__))
 
 pygame.mixer.music.set_volume(0.05)
-pygame.mixer.music.load(path + './res/sounds/Illegals in my Yard (animation).mp3')
+pygame.mixer.music.load(path + '/res/sounds/Illegals in my Yard (animation).mp3')
 pygame.mixer.music.play(-1)
 
-dino_img = pygame.image.load(path + './res/images/dino.png')
-cactus_img = pygame.image.load(path + './res/images/cactus.png')
-point_img = pygame.image.load(path + './res/images/point.png')
+dino_img = pygame.image.load(path + '/res/images/dino.png')
+cactus_img = pygame.image.load(path + '/res/images/cactus.png')
+point_img = pygame.image.load(path + '/res/images/point.png')
 
 scaled_dino_width, scaled_dino_height = 46, 64  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
@@ -39,17 +39,17 @@ jump = False
 cactus_x = WIDTH
 cactus_y = HEIGHT - cactus_img.get_height()
 
-played_before = os.stat(path + "./res/highscore.txt")
+played_before = os.stat(path + "/res/highscore.txt")
 
 if played_before.st_size == 0:
-    f = open(path + "./res/highscore.txt", "w")
+    f = open(path + "/res/highscore.txt", "w")
     f.write("0")
     f.close()
 
 point_x = random.randint(WIDTH, WIDTH * 2)
 point_y = HEIGHT - point_img.get_height()
 
-high_score_file = open(path + "./res/highscore.txt")
+high_score_file = open(path + "/res/highscore.txt")
 high_score = high_score_file.read()
 high_score_file.close()
 
@@ -116,7 +116,7 @@ def draw_shop_button():
     screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 60))
     
 def save_highscore(highscore):
-    f = open(path + "./res/highscore.txt", "w")
+    f = open(path + "/res/highscore.txt", "w")
     f.write(highscore)
     f.close()
 
