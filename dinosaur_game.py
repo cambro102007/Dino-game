@@ -2,22 +2,27 @@ import pygame
 import random
 
 pygame.init()
+pygame.mixer.init()
 
 WIDTH, HEIGHT = 800, 200
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+GREY = (114, 114, 114)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Dinosaur Game')
+
+pygame.mixer.music.load('Illegals in my Yard (animation).mp3')
+pygame.mixer.music.play(-1)
 
 dino_img = pygame.image.load('dino.png')
 cactus_img = pygame.image.load('cactus.png')
 point_img = pygame.image.load('point.png')
 
-scaled_dino_width, scaled_dino_height = 64, 64
-scaled_cactus_width, scaled_cactus_height = 32, 64
-scaled_point_width, scaled_point_height = 32, 32
+scaled_dino_width, scaled_dino_height = 46, 64  #Left is width & right is height
+scaled_cactus_width, scaled_cactus_height = 32, 96
+scaled_point_width, scaled_point_height = 64, 32
 
 dino_img = pygame.transform.scale(dino_img, (scaled_dino_width, scaled_dino_height))
 cactus_img = pygame.transform.scale(cactus_img, (scaled_cactus_width, scaled_cactus_height))
@@ -91,7 +96,7 @@ def main():
     background.fill(WHITE)
 
     while True:
-        clock.tick(60)
+        clock.tick(120)
         screen.fill(WHITE)
 
         draw_dino()
