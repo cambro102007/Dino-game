@@ -1,2 +1,15 @@
+# cache files
 __pycache__/
+.pytest_cache/
+
+# user-specific files
 res/highscore.txt
+res/Perm_point.txt
+
+# mac-os specific files
+# These files will not be generated on Windows Systems, so ignore them if you are developing on Windows.
+.DS_Store
+
+# Distribution files
+dist/
+build/
