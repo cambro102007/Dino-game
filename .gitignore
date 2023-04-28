@@ -9,3 +9,7 @@ res/Perm_point.txt
 # mac-os specific files
 # These files will not be generated on Windows Systems, so ignore them if you are developing on Windows.
 .DS_Store
+
+# Distribution files
+dist/
+build/
