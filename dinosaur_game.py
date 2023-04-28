@@ -39,7 +39,7 @@ scaled_point_width, scaled_point_height = 64, 32
 
 cactus_img = pygame.transform.scale(cactus_img, (scaled_cactus_width, scaled_cactus_height))
 point_img = pygame.transform.scale(point_img, (scaled_point_width, scaled_point_height))
-dino_dead = pygame.transform.scale(dino_dead, (scaled_dino_width, scaled_dino_height))
+dino_dead = pygame.transform.scale(dino_dead, (scaled_dino_width + 40, scaled_dino_height + 4))
 
 dino_x, dino_y = 50, HEIGHT - scaled_dino_height
 dino_vel_y = 0
@@ -76,6 +76,7 @@ def draw_dino(frame):
     dino_image_frame = pygame.image.load(path + dino_frames[frame])
     transformed_img = pygame.transform.scale(dino_image_frame, (scaled_dino_width, scaled_dino_height))
     screen.blit(transformed_img, (dino_x, dino_y))
+    draw_dino_nametag()
 
 def draw_cactus():
     screen.blit(cactus_img, (cactus_x, cactus_y))
@@ -134,6 +135,9 @@ def save_highscore(highscore):
 
 def draw_dead_dino():
     screen.blit(dino_dead, (dino_x, dino_y))
+    text_pos = dino_y - 30
+    text = font.render('Dead Nigger', True, BLACK)
+    screen.blit(text, (dino_x, text_pos))
     
 def animate_dino(ct, lu, cd):
     global current_dino_frame, last_update
@@ -159,7 +163,6 @@ def main():
         screen.fill(WHITE)
         current_time = pygame.time.get_ticks()
         
-        draw_dino_nametag()
         draw_cactus()
         draw_point()
         draw_score()
