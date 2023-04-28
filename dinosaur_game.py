@@ -216,12 +216,6 @@ def main():
             
             animate_dino(current_time, last_update, cooldown)
             
-            #if current_time - last_update >= dino_animation_cooldown:
-            #    current_dino_frame += 1
-            #    last_update = current_time
-            #    if current_dino_frame >= len(dino_frames):
-            #        current_dino_frame = 0
-
         else:
             draw_game_over(score)
             draw_dead_dino()
