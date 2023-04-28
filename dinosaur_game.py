@@ -20,19 +20,28 @@ pygame.mixer.music.set_volume(0.05)
 pygame.mixer.music.load(path + '/res/sounds/Illegals in my Yard (animation).mp3')
 pygame.mixer.music.play(-1)
 
-dino_img = pygame.image.load(path + '/res/images/dino.png')
+dino_animation_cooldown = 100
+current_dino_frame = 0
+last_update = pygame.time.get_ticks()
+
+dino_frames = ['/res/images/man_running_1.png',
+               '/res/images/man_running_2.png',
+               '/res/images/man_running_3.png',
+               '/res/images/man_running_4.png']
+dino_dead = pygame.image.load(path + '/res/images/man_dead_1.png')
 cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
+dino_img = pygame.image.load(path + '/res/images/man_running_1.png')
 
-scaled_dino_width, scaled_dino_height = 46, 64  #Left is width & right is height
+scaled_dino_width, scaled_dino_height = 84, 120  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
 scaled_point_width, scaled_point_height = 64, 32
 
-dino_img = pygame.transform.scale(dino_img, (scaled_dino_width, scaled_dino_height))
 cactus_img = pygame.transform.scale(cactus_img, (scaled_cactus_width, scaled_cactus_height))
 point_img = pygame.transform.scale(point_img, (scaled_point_width, scaled_point_height))
+dino_dead = pygame.transform.scale(dino_dead, (scaled_dino_width + 40, scaled_dino_height + 4))
 
-dino_x, dino_y = 50, HEIGHT - dino_img.get_height()
+dino_x, dino_y = 50, HEIGHT - scaled_dino_height
 dino_vel_y = 0
 jump = False
 
@@ -62,8 +71,12 @@ def draw_dino_nametag():
     text = font.render('Nigger', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
 
-def draw_dino():
-    screen.blit(dino_img, (dino_x, dino_y))
+def draw_dino(frame):
+    global transformed_img
+    dino_image_frame = pygame.image.load(path + dino_frames[frame])
+    transformed_img = pygame.transform.scale(dino_image_frame, (scaled_dino_width, scaled_dino_height))
+    screen.blit(transformed_img, (dino_x, dino_y))
+    draw_dino_nametag()
 
 def draw_cactus():
     screen.blit(cactus_img, (cactus_x, cactus_y))
@@ -120,8 +133,22 @@ def save_highscore(highscore):
     f.write(highscore)
     f.close()
 
+def draw_dead_dino():
+    screen.blit(dino_dead, (dino_x, dino_y))
+    text_pos = dino_y - 30
+    text = font.render('Dead Nigger', True, BLACK)
+    screen.blit(text, (dino_x, text_pos))
+    
+def animate_dino(ct, lu, cd):
+    global current_dino_frame, last_update
+    if ct - lu >= cd:
+        current_dino_frame += 1
+        last_update = ct
+    if current_dino_frame >= len(dino_frames):
+            current_dino_frame = 0
+
 def main():
-    global dino_y, dino_vel_y, jump, cactus_x, score, point_x
+    global dino_y, dino_x, dino_vel_y, jump, cactus_x, score, point_x, current_dino_frame, last_update
 
     clock = pygame.time.Clock()
     game_over = False
@@ -134,9 +161,8 @@ def main():
     while True:
         clock.tick(120)
         screen.fill(WHITE)
-
-        draw_dino()
-        draw_dino_nametag()
+        current_time = pygame.time.get_ticks()
+        
         draw_cactus()
         draw_point()
         draw_score()
@@ -155,7 +181,7 @@ def main():
                     if event.key == pygame.K_SPACE:
                         reset_game()
                         game_over = False
-                        dino_y = HEIGHT - dino_img.get_height()
+                        dino_y = HEIGHT - scaled_dino_height
                         jump = False
                         cactus_x = WIDTH
 
@@ -163,11 +189,12 @@ def main():
                         back_to_death_screen = shop_gui()
                         
         if not game_over:
+            draw_dino(current_dino_frame)
             if jump:
                 dino_y += dino_vel_y
                 dino_vel_y += 1
-                if dino_y >= HEIGHT - dino_img.get_height():
-                    dino_y = HEIGHT - dino_img.get_height()
+                if dino_y >= HEIGHT - transformed_img.get_height():
+                    dino_y = HEIGHT - transformed_img.get_height()
                     jump = False
 
             if cactus_x < -cactus_img.get_width():
@@ -180,13 +207,25 @@ def main():
                     
             cactus_x -= random_speed
             point_x -= random_speed
-
+            
+            if random_speed < 6:
+                cooldown = 200
+            elif random_speed < 8:
+                cooldown = 175
+            elif random_speed < 10:
+                cooldown = 125
+            elif random_speed < 13:
+                cooldown = 75
+            
+            animate_dino(current_time, last_update, cooldown)
+            
         else:
             draw_game_over(score)
+            draw_dead_dino()
 
         pygame.display.update()
 
-        dino_rect = pygame.Rect(dino_x, dino_y, dino_img.get_width(), dino_img.get_height())
+        dino_rect = pygame.Rect(dino_x, dino_y, transformed_img.get_width(), transformed_img.get_height())
         cactus_rect = pygame.Rect(cactus_x, cactus_y, cactus_img.get_width(), cactus_img.get_height())
         point_rect = pygame.Rect(point_x, point_y, point_img.get_width(), point_img.get_height())
 
