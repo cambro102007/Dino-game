@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 from shop_dino import shop_gui
+from shop_dino import load_box1_bought
 
 pygame.init()
 pygame.mixer.init()
@@ -68,7 +69,7 @@ font = pygame.font.Font(None, 36)
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
-    text = font.render('Nigger', True, BLACK)
+    text = font.render('', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
 
 def draw_dino(frame):
@@ -136,7 +137,7 @@ def save_highscore(highscore):
 def draw_dead_dino():
     screen.blit(dino_dead, (dino_x, dino_y))
     text_pos = dino_y - 30
-    text = font.render('Dead Nigger', True, BLACK)
+    text = font.render('Dead ', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
     
 def animate_dino(ct, lu, cd):
@@ -148,6 +149,7 @@ def animate_dino(ct, lu, cd):
             current_dino_frame = 0
 
 file_path = path + "/res/Perm_point.txt"
+box1_path = path + "/res/box1.txt"
 
 def load_points(file_path):
     if file_exists(file_path):
@@ -189,10 +191,23 @@ def write_file(file_path, content):
     with open(file_path, 'w') as file:
         file.write(content)
 
+def load_box1_bought():
+    if not file_exists(box1_path):
+        return False
+    else:
+        with open(box1_path, 'r') as file:
+            content = file.read()
+            if content:
+                return content == 'True'
+            else:
+                return False
+
+
 def main():
     global dino_y, dino_x, dino_vel_y, jump, cactus_x, score, point_x, current_dino_frame, last_update
     global total_points
     
+ 
     clock = pygame.time.Clock()
     game_over = False
     random_speed = 6
@@ -201,6 +216,8 @@ def main():
 
     background = pygame.Surface(screen.get_size())
     background.fill(WHITE)
+     
+    dino_jump_vel = -20
      
     try:
         while True:
@@ -231,7 +248,13 @@ def main():
                             cactus_x = WIDTH
 
                         if event.key == pygame.K_s:
-                            back_to_death_screen = shop_gui(screen, total_points)
+                            back_to_death_screen = shop_gui(screen, total_points, box1_path)
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE and not jump:
+                        jump = True
+                        dino_vel_y = dino_jump_vel
+                 
                             
             if not game_over:
                 draw_dino(current_dino_frame)
@@ -281,10 +304,12 @@ def main():
                 score += 1 
                 total_points += 1
                 point_x = random.randint(WIDTH, WIDTH * 2)
-
+    
     finally:
         save_points(file_path, total_points)
         pygame.quit()
 
 if __name__ == '__main__':
     main()
+    box1_path = 'res/box1.txt'
+    main(box1_path)
