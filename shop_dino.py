@@ -8,7 +8,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREY = (180, 180, 180)
 
-def shop_gui():
+def shop_gui(screen, total_points):
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Dino Shop')
 
@@ -31,6 +31,10 @@ def shop_gui():
         boxes.append(box)
         box_rects.append(box_rect)
 
+    def draw_total_points_shop():
+        text = font.render(f'Total Points: {total_points}', True, BLACK)
+        screen.blit(text, (WIDTH - text.get_width() - 10, 10))
+
     running = True
     back_to_death_screen = False
     while running:
@@ -44,6 +48,7 @@ def shop_gui():
         for i in range(1, 6):
             pygame.draw.line(screen, BLACK, (i * (box_width + 2) - 1, HEIGHT - box_height), (i * (box_width + 2) - 1, HEIGHT), 2)
 
+        draw_total_points_shop()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -59,4 +64,6 @@ def shop_gui():
     return back_to_death_screen
 
 if __name__ == "__main__":
-    shop_gui()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    total_points = 0
+    shop_gui(screen, total_points)
