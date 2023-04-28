@@ -134,6 +134,14 @@ def save_highscore(highscore):
 
 def draw_dead_dino():
     screen.blit(dino_dead, (dino_x, dino_y))
+    
+def animate_dino(ct, lu, cd):
+    global current_dino_frame, last_update
+    if ct - lu >= cd:
+        current_dino_frame += 1
+        last_update = ct
+    if current_dino_frame >= len(dino_frames):
+            current_dino_frame = 0
 
 def main():
     global dino_y, dino_x, dino_vel_y, jump, cactus_x, score, point_x, current_dino_frame, last_update
@@ -197,11 +205,22 @@ def main():
             cactus_x -= random_speed
             point_x -= random_speed
             
-            if current_time - last_update >= dino_animation_cooldown:
-                current_dino_frame += 1
-                last_update = current_time
-                if current_dino_frame >= len(dino_frames):
-                    current_dino_frame = 0
+            if random_speed < 6:
+                cooldown = 200
+            elif random_speed < 8:
+                cooldown = 175
+            elif random_speed < 10:
+                cooldown = 125
+            elif random_speed < 13:
+                cooldown = 75
+            
+            animate_dino(current_time, last_update, cooldown)
+            
+            #if current_time - last_update >= dino_animation_cooldown:
+            #    current_dino_frame += 1
+            #    last_update = current_time
+            #    if current_dino_frame >= len(dino_frames):
+            #        current_dino_frame = 0
 
         else:
             draw_game_over(score)
