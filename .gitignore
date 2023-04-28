@@ -1,5 +1,6 @@
 # cache files
 __pycache__/
+.pytest_cache/
 
 # user-specific files
 res/highscore.txt
