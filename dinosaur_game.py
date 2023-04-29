@@ -68,7 +68,7 @@ font = pygame.font.Font(None, 36)
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
-    text = font.render('Nigger', True, BLACK)
+    text = font.render('', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
 
 def draw_dino(frame):
@@ -136,7 +136,7 @@ def save_highscore(highscore):
 def draw_dead_dino():
     screen.blit(dino_dead, (dino_x, dino_y))
     text_pos = dino_y - 30
-    text = font.render('Dead Nigger', True, BLACK)
+    text = font.render('Dead ', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
     
 def animate_dino(ct, lu, cd):
@@ -145,97 +145,147 @@ def animate_dino(ct, lu, cd):
         current_dino_frame += 1
         last_update = ct
     if current_dino_frame >= len(dino_frames):
-            current_dino_frame = 0
+            current_dino_frame = 0        
+
+file_path = path + "/res/Perm_point.txt"
+
+def load_points(file_path):
+    if file_exists(file_path):
+        content = read_file(file_path)
+        points = int(content)
+    else:
+        points = 0
+
+    return points
+
+def file_exists(file_path):
+    return os.path.exists(file_path)
+
+def read_file(file_path):
+    with open(file_path, 'r') as file:
+        content = file.read()
+    return content
+
+def save_points(file_path, points):
+    print("Saving points:", points)
+    with open(file_path, 'w') as file:
+        file.write(str(points))
+
+def load_points(file_path):
+    if not file_exists(file_path):
+        return 0
+    else:
+        with open(file_path, 'r') as file:
+            content = file.read()
+            if content.strip() == '':
+                return 0
+            elif content.isdigit():
+                return int(content)
+            else:
+                print(f"Invalid content in file '{file_path}': '{content}'")
+                return 0
+
+def write_file(file_path, content):
+    with open(file_path, 'w') as file:
+        file.write(content)
 
 def main():
     global dino_y, dino_x, dino_vel_y, jump, cactus_x, score, point_x, current_dino_frame, last_update
-
+    global total_points
+    
     clock = pygame.time.Clock()
     game_over = False
     random_speed = 6
     back_to_death_screen = False 
+    total_points = load_points(file_path)
 
     background = pygame.Surface(screen.get_size())
     background.fill(WHITE)
+     
+    try:
+        while main_menu() == True:
+            pygame.display.set_caption('Dinosaur Game')
+            clock.tick(120)
+            screen.fill(WHITE)
+            current_time = pygame.time.get_ticks()
+            
+            draw_cactus()
+            draw_point()
+            draw_score()
+            draw_high_score()
 
-    while main_menu() == True:
-        pygame.display.set_caption('Dinosaur Game')
-        clock.tick(120)
-        screen.fill(WHITE)
-        current_time = pygame.time.get_ticks()
-        
-        draw_cactus()
-        draw_point()
-        draw_score()
-        draw_high_score()
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                exit()
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and not jump or event.key == pygame.K_UP and not jump:
-                    jump = True
-                    dino_vel_y = -20
-
-                if game_over == True:
-                    if event.key == pygame.K_SPACE:
-                        reset_game()
-                        game_over = False
-                        dino_y = HEIGHT - scaled_dino_height
-                        jump = False
-                        cactus_x = WIDTH
-
-                    if event.key == pygame.K_s:
-                        back_to_death_screen = shop_gui(True)
-                        
-        if not game_over:
-            draw_dino(current_dino_frame)
-            if jump:
-                dino_y += dino_vel_y
-                dino_vel_y += 1
-                if dino_y >= HEIGHT - transformed_img.get_height():
-                    dino_y = HEIGHT - transformed_img.get_height()
-                    jump = False
-
-            if cactus_x < -cactus_img.get_width():
-                cactus_x = WIDTH
-                score += 1
-                random_speed = random.randint(5, 12)
-
-            if point_x < -point_img.get_width():
-                point_x = generate_point_position(cactus_x, scaled_cactus_width)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
                     
-            cactus_x -= random_speed
-            point_x -= random_speed
-            
-            if random_speed < 6:
-                cooldown = 200
-            elif random_speed < 8:
-                cooldown = 175
-            elif random_speed < 10:
-                cooldown = 125
-            elif random_speed < 13:
-                cooldown = 75
-            
-            animate_dino(current_time, last_update, cooldown)
-            
-        else:
-            draw_game_over(score)
-            draw_dead_dino()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE and not jump or event.key == pygame.K_UP and not jump:
+                        jump = True
+                        dino_vel_y = -20
+                    
+                    if game_over == True:
+                        if event.key == pygame.K_SPACE:
+                            reset_game()
+                            game_over = False
+                            dino_y = HEIGHT - scaled_dino_height
+                            jump = False
+                            cactus_x = WIDTH
 
-        pygame.display.update()
+                        if event.key == pygame.K_s:
+                            back_to_death_screen = shop_gui(screen, True, total_points)
+                            
+            if not game_over:
+                draw_dino(current_dino_frame)
+                if jump:
+                    dino_y += dino_vel_y
+                    dino_vel_y += 1
+                    if dino_y >= HEIGHT - transformed_img.get_height():
+                        dino_y = HEIGHT - transformed_img.get_height()
+                        jump = False
 
-        dino_rect = pygame.Rect(dino_x, dino_y, transformed_img.get_width(), transformed_img.get_height())
-        cactus_rect = pygame.Rect(cactus_x, cactus_y, cactus_img.get_width(), cactus_img.get_height())
-        point_rect = pygame.Rect(point_x, point_y, point_img.get_width(), point_img.get_height())
+                if cactus_x < -cactus_img.get_width():
+                    cactus_x = WIDTH
+                    score += 1
+                    random_speed = random.randint(5, 12)
 
-        if dino_rect.colliderect(cactus_rect):
-            set_high_score(score)
-            game_over = True
-        elif dino_rect.colliderect(point_rect):
-            score += 1 
-            point_x = random.randint(WIDTH, WIDTH * 2)
+                if point_x < -point_img.get_width():
+                    point_x = generate_point_position(cactus_x, scaled_cactus_width)
+                        
+                cactus_x -= random_speed
+                point_x -= random_speed
+                
+                if random_speed < 6:
+                    cooldown = 200
+                elif random_speed < 8:
+                    cooldown = 175
+                elif random_speed < 10:
+                    cooldown = 125
+                elif random_speed < 13:
+                    cooldown = 75
+                
+                animate_dino(current_time, last_update, cooldown)
+                
+            else:
+                draw_game_over(score)
+                draw_dead_dino()
+
+            pygame.display.update()
+
+            dino_rect = pygame.Rect(dino_x, dino_y, transformed_img.get_width(), transformed_img.get_height())
+            cactus_rect = pygame.Rect(cactus_x, cactus_y, cactus_img.get_width(), cactus_img.get_height())
+            point_rect = pygame.Rect(point_x, point_y, point_img.get_width(), point_img.get_height())
+
+            if dino_rect.colliderect(cactus_rect):
+                set_high_score(score)
+                game_over = True
+            elif dino_rect.colliderect(point_rect):
+                score += 1 
+                total_points += 1
+                point_x = random.randint(WIDTH, WIDTH * 2)
+
+    finally:
+        save_points(file_path, total_points)
+        pygame.quit()
 
 if __name__ == '__main__':
     main()

@@ -1,9 +1,12 @@
 import pygame
 import pygame_gui
 from shop_dino import shop_gui
+import os
 
 
 pygame.init()
+
+path = os.path.dirname(os.path.abspath(__file__))
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -16,6 +19,26 @@ background.fill(pygame.Color('#FFFFFF'))
 
 manager = pygame_gui.UIManager((1200, 400))
 font = pygame.font.Font(None, 36)
+
+def load_points(file_path):
+    if file_exists(file_path):
+        content = read_file(file_path)
+        points = int(content)
+    else:
+        points = 0
+
+    return points
+
+def file_exists(file_path):
+    return os.path.exists(file_path)
+
+def read_file(file_path):
+    with open(file_path, 'r') as file:
+        content = file.read()
+    return content
+
+file_path = path + "/res/Perm_point.txt"
+total_points = load_points(file_path)
 
 def draw_title():
     text = font.render('Dino Game', True, BLACK)
@@ -46,7 +69,7 @@ def main_menu():
                     is_running = False
                     
                 if event.ui_element == shop_button:
-                    shop_gui(True)
+                    shop_gui(window_surface, True, total_points)
                     
         
             manager.process_events(event)
