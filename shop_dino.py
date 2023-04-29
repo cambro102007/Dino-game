@@ -11,6 +11,7 @@ GREY = (180, 180, 180)
 
 higher_jumps_purchased = False
 
+<<<<<<< HEAD
 def load_purchased_boxes():
     try:
         with open('box_purchase.yaml', 'r') as f:
@@ -33,6 +34,9 @@ def write_boxes_file(boxes):
 
 def shop_gui(screen, total_points):
     purchased_boxes = load_purchased_boxes()
+=======
+def shop_gui(screen, is_running, total_points=0):
+>>>>>>> c16d16dd208ad24178b97317dde3f694f7c361ff
     global dino_vel_y
     global higher_jumps_purchased
     
@@ -65,7 +69,7 @@ def shop_gui(screen, total_points):
         text = font.render(f'Total Points: {total_points}', True, BLACK)
         screen.blit(text, (WIDTH - text.get_width() - 10, 10))
 
-    running = True
+    running = is_running
     back_to_death_screen = False
     
     while running:
@@ -111,5 +115,4 @@ def shop_gui(screen, total_points):
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    total_points = 0
-    shop_gui(screen, total_points)
+    shop_gui(screen, True)
