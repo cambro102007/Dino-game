@@ -68,7 +68,7 @@ font = pygame.font.Font(None, 36)
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
-    text = font.render('Nigger', True, BLACK)
+    text = font.render('', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
 
 def draw_dino(frame):
@@ -136,7 +136,7 @@ def save_highscore(highscore):
 def draw_dead_dino():
     screen.blit(dino_dead, (dino_x, dino_y))
     text_pos = dino_y - 30
-    text = font.render('Dead Nigger', True, BLACK)
+    text = font.render('Dead ', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
     
 def animate_dino(ct, lu, cd):
@@ -145,7 +145,7 @@ def animate_dino(ct, lu, cd):
         current_dino_frame += 1
         last_update = ct
     if current_dino_frame >= len(dino_frames):
-            current_dino_frame = 0
+            current_dino_frame = 0        
 
 file_path = path + "/res/Perm_point.txt"
 
@@ -221,7 +221,7 @@ def main():
                     if event.key == pygame.K_SPACE and not jump or event.key == pygame.K_UP and not jump:
                         jump = True
                         dino_vel_y = -20
-
+                    
                     if game_over == True:
                         if event.key == pygame.K_SPACE:
                             reset_game()
