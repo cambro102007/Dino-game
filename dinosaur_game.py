@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 from shop_dino import shop_gui
+from main_menu import main_menu
 
 pygame.init()
 pygame.mixer.init()
@@ -13,7 +14,6 @@ BLACK = (0, 0, 0)
 GREY = (114, 114, 114)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Dinosaur Game')
 path = os.path.dirname(os.path.abspath(__file__))
 
 pygame.mixer.music.set_volume(0.05)
@@ -203,7 +203,8 @@ def main():
     background.fill(WHITE)
      
     try:
-        while True:
+        while main_menu() == True:
+            pygame.display.set_caption('Dinosaur Game')
             clock.tick(120)
             screen.fill(WHITE)
             current_time = pygame.time.get_ticks()
@@ -231,7 +232,7 @@ def main():
                             cactus_x = WIDTH
 
                         if event.key == pygame.K_s:
-                            back_to_death_screen = shop_gui(screen, total_points)
+                            back_to_death_screen = shop_gui(screen, True, total_points)
                             
             if not game_over:
                 draw_dino(current_dino_frame)
