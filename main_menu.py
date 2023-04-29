@@ -1,5 +1,6 @@
 import pygame
 import pygame_gui
+from shop_dino import shop_gui
 
 
 pygame.init()
@@ -19,12 +20,14 @@ font = pygame.font.Font(None, 36)
 def draw_title():
     text = font.render('Dino Game', True, BLACK)
     window_surface.blit(text, (525, 100))
-    
-    
 
 play_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((540, 170), (100, 50)),
                                             text='Play',
                                             manager=manager)
+
+shop_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((540, 230), (100, 50)),
+                                           text="Shop",
+                                           manager=manager)
 
 clock = pygame.time.Clock()
 is_running = True
@@ -41,6 +44,10 @@ def main_menu():
                 if event.ui_element == play_button:
                     start_game = True
                     is_running = False
+                    
+                if event.ui_element == shop_button:
+                    shop_gui(True)
+                    
         
             manager.process_events(event)
         

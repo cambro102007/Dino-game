@@ -7,11 +7,11 @@ WIDTH, HEIGHT = 1200, 400
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-def shop_gui():
+def shop_gui(is_running):
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Dino Shop')
 
-    running = True
+    running = is_running
     back_to_death_screen = False
     while running:
         screen.fill(WHITE)
