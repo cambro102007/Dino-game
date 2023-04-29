@@ -122,7 +122,6 @@ def reset_game():
     cactus_x = WIDTH
     score = 0
     point_x = generate_point_position(cactus_x, scaled_cactus_width)
-
 def draw_shop_button():
     font_button = pygame.font.Font(None, 36)
     text_button = font_button.render('Press S to Open Shop', True, BLACK)
@@ -219,8 +218,8 @@ def main():
                     
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and not jump or event.key == pygame.K_UP and not jump:
-                        jump = True
-                        dino_vel_y = -20
+                            jump = True
+                            dino_vel_y = -20
                     
                     if game_over == True:
                         if event.key == pygame.K_SPACE:
@@ -230,9 +229,11 @@ def main():
                             jump = False
                             cactus_x = WIDTH
 
-                        if event.key == pygame.K_s:
-                            back_to_death_screen = shop_gui(screen, total_points)
-                            
+                    if event.key == pygame.K_s:
+                        back_to_death_screen, total_points = shop_gui(screen, total_points)
+                        if back_to_death_screen:
+                            running = False
+            
             if not game_over:
                 draw_dino(current_dino_frame)
                 if jump:

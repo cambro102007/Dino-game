@@ -1,4 +1,5 @@
 import pygame
+import yaml
 
 pygame.init()
 
@@ -10,7 +11,28 @@ GREY = (180, 180, 180)
 
 higher_jumps_purchased = False
 
+def load_purchased_boxes():
+    try:
+        with open('box_purchase.yaml', 'r') as f:
+            purchased_boxes = yaml.safe_load(f)
+    except FileNotFoundError:
+
+        purchased_boxes = {"Box 1": False}
+        save_purchased_boxes(purchased_boxes)
+
+    return purchased_boxes
+
+def save_purchased_boxes(purchased_boxes):
+    with open('box_purchase.yaml', 'w') as f:
+        yaml.dump(purchased_boxes, f)
+
+
+def write_boxes_file(boxes):
+    with open('boxes.yml', 'w') as f:
+        yaml.dump(boxes, f)
+
 def shop_gui(screen, total_points):
+    purchased_boxes = load_purchased_boxes()
     global dino_vel_y
     global higher_jumps_purchased
     
@@ -24,14 +46,11 @@ def shop_gui(screen, total_points):
     box_texts = ['500 points to purchase', 'Box 2', 'Box 3', 'Box 4', 'Box 5', 'Box 6']
     boxes = []
     box_rects = []
-    global purchased_boxes
-    purchased_boxes = [False] * len(box_texts)
-    
     
     for i, text in enumerate(box_texts):
         box = pygame.Surface((box_width, box_height))
         box.fill(GREY)
-        if i == 0 and purchased_boxes[i]:
+        if i == 0 and purchased_boxes["Box 1"]:
             text = font.render('Purchased', True, BLACK)
         else:
             text = font.render(text, True, BLACK)
@@ -74,9 +93,10 @@ def shop_gui(screen, total_points):
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 for i, box_rect in enumerate(box_rects):
                     if box_rect.collidepoint(event.pos):
-                        if i == 0 and total_points >= 500 and not purchased_boxes[i]:
+                        if i == 0 and not purchased_boxes.get("Box 1") and total_points >= 500:
                             total_points -= 500
-                            purchased_boxes[i] = True
+                            purchased_boxes["Box 1"] = True
+                            save_purchased_boxes(purchased_boxes)
                             box = pygame.Surface((box_width, box_height))
                             box.fill(GREY)
                             text = font.render('Purchased', True, BLACK)
@@ -87,7 +107,7 @@ def shop_gui(screen, total_points):
                 
         pygame.display.update()
 
-    return back_to_death_screen
+    return back_to_death_screen, total_points
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
