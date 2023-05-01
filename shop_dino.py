@@ -11,7 +11,6 @@ GREY = (180, 180, 180)
 
 higher_jumps_purchased = False
 
-<<<<<<< HEAD
 def load_purchased_boxes():
     try:
         with open('box_purchase.yaml', 'r') as f:
@@ -32,13 +31,11 @@ def write_boxes_file(boxes):
     with open('boxes.yml', 'w') as f:
         yaml.dump(boxes, f)
 
-def shop_gui(screen, total_points):
-    purchased_boxes = load_purchased_boxes()
-=======
 def shop_gui(screen, is_running, total_points=0):
->>>>>>> c16d16dd208ad24178b97317dde3f694f7c361ff
     global dino_vel_y
     global higher_jumps_purchased
+    
+    purchased_boxes = load_purchased_boxes()
     
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Dino Shop')
