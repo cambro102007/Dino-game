@@ -68,7 +68,7 @@ font = pygame.font.Font(None, 36)
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
-    text = font.render('Nigger', True, BLACK)
+    text = font.render('[REDACTED]', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
 
 def draw_dino(frame):
@@ -136,7 +136,7 @@ def save_highscore(highscore):
 def draw_dead_dino():
     screen.blit(dino_dead, (dino_x, dino_y))
     text_pos = dino_y - 30
-    text = font.render('Dead Nigger', True, BLACK)
+    text = font.render('Dead [REDACTED]', True, BLACK)
     screen.blit(text, (dino_x, text_pos))
     
 def animate_dino(ct, lu, cd):
@@ -188,6 +188,9 @@ def main():
 
                     if event.key == pygame.K_s:
                         back_to_death_screen = shop_gui()
+                        
+                if event.key == pygame.K_DOWN and not game_over:
+                    print('THIS FEATURE IS IN PROGRESS')
                         
         if not game_over:
             draw_dino(current_dino_frame)
