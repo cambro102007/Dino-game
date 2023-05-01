@@ -100,7 +100,7 @@ def draw_game_over(final_score):
     font_big = pygame.font.Font(None, 72)
     text_game_over = font_big.render('You Died', True, BLACK)
     text_final_score = font.render(f'Final Score: {final_score}', True, BLACK)
-    text_respawn = font.render('Press Space to Restart', True, BLACK)
+    text_respawn = font.render('Press Jump to Restart', True, BLACK)
 
     screen.blit(text_game_over, (WIDTH // 2 - text_game_over.get_width() // 2, HEIGHT // 3 - text_game_over.get_height() // 2))
     screen.blit(text_final_score, (WIDTH // 2 - text_final_score.get_width() // 2, HEIGHT // 2 - text_final_score.get_height() // 2))
@@ -179,7 +179,7 @@ def main():
                     dino_vel_y = -20
 
                 if game_over == True:
-                    if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                         reset_game()
                         game_over = False
                         dino_y = HEIGHT - scaled_dino_height
