@@ -3,6 +3,8 @@ import random
 import os
 from shop_dino import shop_gui
 from main_menu import main_menu
+from shop_dino import purchased_boxes
+
 
 pygame.init()
 pygame.mixer.init()
@@ -221,7 +223,13 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and not jump or event.key == pygame.K_UP and not jump:
                         jump = True
-                        dino_vel_y = -20
+                        
+                        if purchased_boxes["Box 1"]:
+                            dino_vel_y = -23
+                        else:
+                            dino_vel_y = -20
+
+
                     
                     if game_over == True:
                         if event.key == pygame.K_SPACE:
