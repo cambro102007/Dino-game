@@ -1,5 +1,6 @@
 import pygame
 import yaml
+import os
 
 pygame.init()
 
@@ -9,7 +10,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREY = (180, 180, 180)
 
-higher_jumps_purchased = False
+path = os.path.dirname(os.path.abspath(__file__))
 
 def load_purchased_boxes():
     try:
@@ -22,21 +23,33 @@ def load_purchased_boxes():
 
     return purchased_boxes
 
+purchased_boxes = load_purchased_boxes()
+
 def save_purchased_boxes(purchased_boxes):
     with open('box_purchase.yaml', 'w') as f:
         yaml.dump(purchased_boxes, f)
 
+def save_Perm_point(Perm_point):
+    f = open(path + "/res/Perm_point.txt", "w")
+    f.write(Perm_point)
+    f.close()
 
-def write_boxes_file(boxes):
-    with open('boxes.yml', 'w') as f:
-        yaml.dump(boxes, f)
+def set_points():
+    global Perm_point
+    if purchased_boxes["Box 1"] == True:
+        Perm_point_file = open(path + "/res/Perm_point.txt", "r")
+        Perm_point = int(Perm_point_file.read().strip())
+        Perm_point_file.close()
+        Perm_point -= 500
+    
+        Perm_point_file = open(path + "/res/Perm_point.txt", "w")
+        Perm_point_file.write(str(Perm_point))
+        Perm_point_file.close()
+        
+
+    save_Perm_point(Perm_point.__str__())
 
 def shop_gui(screen, is_running, total_points=0):
-    global dino_vel_y
-    global higher_jumps_purchased
-    
-    purchased_boxes = load_purchased_boxes()
-    
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Dino Shop')
 
@@ -44,7 +57,7 @@ def shop_gui(screen, is_running, total_points=0):
     exit_text = font.render('Click S to exit', True, BLACK)
 
     box_width, box_height = (WIDTH - 10) // 6, HEIGHT - 50
-    box_texts = ['500 points to purchase', 'Box 2', 'Box 3', 'Box 4', 'Box 5', 'Box 6']
+    box_texts = ['500 points', 'Box 2', 'Box 3', 'Box 4', 'Box 5', 'Box 6']
     boxes = []
     box_rects = []
     
@@ -98,6 +111,7 @@ def shop_gui(screen, is_running, total_points=0):
                             total_points -= 500
                             purchased_boxes["Box 1"] = True
                             save_purchased_boxes(purchased_boxes)
+                            set_points()
                             box = pygame.Surface((box_width, box_height))
                             box.fill(GREY)
                             text = font.render('Purchased', True, BLACK)
