@@ -101,7 +101,8 @@ def draw_game_over(final_score):
     screen.blit(text_final_score, (WIDTH // 2 - text_final_score.get_width() // 2, HEIGHT // 2 - text_final_score.get_height() // 2))
     screen.blit(text_respawn, (WIDTH // 2 - text_respawn.get_width() // 2, HEIGHT * 2 // 3 - text_respawn.get_height() // 2))
     draw_shop_button()
-
+    draw_menu_button()
+    
 def draw_high_score():
     text = font.render(f'High Score: {high_score}', True, BLACK)
     screen.blit(text, (525, 10))
@@ -121,7 +122,12 @@ def reset_game():
 def draw_shop_button():
     font_button = pygame.font.Font(None, 36)
     text_button = font_button.render('Press S to Open Shop', True, BLACK)
-    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 60))
+    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 70))
+    
+def draw_menu_button():
+    font_button = pygame.font.Font(None, 36)
+    text_button = font_button.render('Press M to go back to the Menu', True, BLACK)
+    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 109)) 
     
 def save_highscore(highscore):
     f = open(path + "/res/highscore.txt", "w")
@@ -227,8 +233,12 @@ def main():
                             cactus_x = WIDTH
 
                         if event.key == pygame.K_s:
-                            back_to_death_screen = shop_gui(screen, True, total_points)
+                            shop_gui(screen, True, total_points)
                             
+                        if event.key == pygame.K_m:
+                            main_menu()
+                            return
+
             if not game_over:
                 draw_dino(current_dino_frame)
                 if jump:
