@@ -54,6 +54,7 @@ shop_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((540, 230),
 
 clock = pygame.time.Clock()
 is_running = True
+start_game = False
 
 def main_menu():
     global start_game, is_running
