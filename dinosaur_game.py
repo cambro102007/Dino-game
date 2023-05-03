@@ -16,10 +16,6 @@ GREY = (114, 114, 114)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 path = os.path.dirname(os.path.abspath(__file__))
 
-pygame.mixer.music.set_volume(0.05)
-pygame.mixer.music.load(path + '/res/sounds/Illegals in my Yard (animation).mp3')
-pygame.mixer.music.play(-1)
-
 dino_animation_cooldown = 100
 current_dino_frame = 0
 last_update = pygame.time.get_ticks()
@@ -64,7 +60,6 @@ high_score_file.close()
 
 score = 0
 font = pygame.font.Font(None, 36)
-
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
