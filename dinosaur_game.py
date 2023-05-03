@@ -240,7 +240,7 @@ def main():
                             cactus_x = WIDTH
 
                         if event.key == pygame.K_s:
-                            back_to_death_screen = shop_gui(screen, True, total_points)
+                            shop_gui(screen, True, total_points)
                             
             if not game_over:
                 draw_dino(current_dino_frame)

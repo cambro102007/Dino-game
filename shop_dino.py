@@ -108,7 +108,6 @@ def shop_gui(screen, is_running, total_points=0):
                 for i, box_rect in enumerate(box_rects):
                     if box_rect.collidepoint(event.pos):
                         if i == 0 and not purchased_boxes.get("Box 1") and total_points >= 500:
-                            total_points -= 500
                             purchased_boxes["Box 1"] = True
                             save_purchased_boxes(purchased_boxes)
                             set_points()
