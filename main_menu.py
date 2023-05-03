@@ -9,7 +9,7 @@ path = os.path.dirname(os.path.abspath(__file__))
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-pygame.display.set_caption('Quick Start')
+pygame.display.set_caption('Dino Game')
 window_surface = pygame.display.set_mode((1200, 400))
 
 background = pygame.Surface((1200, 400))
