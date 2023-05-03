@@ -62,9 +62,10 @@ mute_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((20, 10), (
 clock = pygame.time.Clock()
 is_running = True
 start_game = False
+mute = False
 
 def main_menu():
-    global start_game, is_running
+    global start_game, is_running, mute
     while is_running:
         time_delta = clock.tick(60)/1000.0
         for event in pygame.event.get():
@@ -78,11 +79,16 @@ def main_menu():
                     
                 if event.ui_element == shop_button:
                     shop_gui(window_surface, True, total_points)
-                    
+                                
                 if event.ui_element == mute_button:
-                    pygame.mixer.music.set_volume(0)
+                    if not mute:
+                        pygame.mixer.music.set_volume(0)
+                        mute = True
+   
+                    else:
+                        pygame.mixer.music.set_volume(0.05)
+                        mute = False       
 
-                    
             manager.process_events(event)
         
         manager.update(time_delta)
