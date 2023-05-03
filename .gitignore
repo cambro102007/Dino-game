@@ -5,6 +5,7 @@ __pycache__/
 # user-specific files
 res/highscore.txt
 res/Perm_point.txt
+box_purchase.yaml
 
 # mac-os specific files
 # These files will not be generated on Windows Systems, so ignore them if you are developing on Windows.
