@@ -209,9 +209,14 @@ def main():
             clock.tick(120)
             current_time = pygame.time.get_ticks()
             
-            for i in range(0, tiles):
-                screen.blit(background_img, (i * background_width + scroll, -320))
-            scroll -= 5
+            if game_over == False:
+                for i in range(0, tiles):
+                    screen.blit(background_img, (i * background_width + scroll, -320))
+                scroll -= 5
+            else:
+                for i in range(0, tiles):
+                    screen.blit(background_img, (i * background_width + scroll, -320))
+                scroll -= 0
             
             draw_cactus()
             draw_point()
@@ -245,8 +250,6 @@ def main():
 
                         if event.key == pygame.K_s:
                             shop_gui(screen, True, total_points)
-            
-            pygame.display.update()
                                
             if not game_over:
                 draw_dino(current_dino_frame)
