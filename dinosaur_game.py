@@ -228,9 +228,7 @@ def main():
                             dino_vel_y = -23
                         else:
                             dino_vel_y = -20
-
-
-                    
+              
                     if game_over == True:
                         if event.key == pygame.K_SPACE:
                             reset_game()
@@ -286,9 +284,10 @@ def main():
             if dino_rect.colliderect(cactus_rect):
                 set_high_score(score)
                 game_over = True
-            elif dino_rect.colliderect(point_rect):
+            if dino_rect.colliderect(point_rect):
                 score += 1 
                 total_points += 1
+                save_points(file_path, total_points)
                 point_x = random.randint(WIDTH, WIDTH * 2)
 
     finally:
