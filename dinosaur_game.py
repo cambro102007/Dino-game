@@ -19,10 +19,6 @@ GREY = (114, 114, 114)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 path = os.path.dirname(os.path.abspath(__file__))
 
-pygame.mixer.music.set_volume(0.05)
-pygame.mixer.music.load(path + '/res/sounds/Illegals in my Yard (animation).mp3')
-pygame.mixer.music.play(-1)
-
 dino_animation_cooldown = 100
 current_dino_frame = 0
 last_update = pygame.time.get_ticks()
@@ -70,7 +66,6 @@ high_score_file.close()
 
 score = 0
 font = pygame.font.Font(None, 36)
-file_path = path + "/res/Perm_point.txt"
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
@@ -112,7 +107,8 @@ def draw_game_over(final_score):
     screen.blit(text_final_score, (WIDTH // 2 - text_final_score.get_width() // 2, HEIGHT // 2 - text_final_score.get_height() // 2))
     screen.blit(text_respawn, (WIDTH // 2 - text_respawn.get_width() // 2, HEIGHT * 2 // 3 - text_respawn.get_height() // 2))
     draw_shop_button()
-
+    draw_menu_button()
+    
 def draw_high_score():
     text = font.render(f'High Score: {high_score}', True, BLACK)
     screen.blit(text, (525, 10))
@@ -132,7 +128,12 @@ def reset_game():
 def draw_shop_button():
     font_button = pygame.font.Font(None, 36)
     text_button = font_button.render('Press S to Open Shop', True, BLACK)
-    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 60))
+    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 70))
+    
+def draw_menu_button():
+    font_button = pygame.font.Font(None, 36)
+    text_button = font_button.render('Press M to go back to the Menu', True, BLACK)
+    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 109)) 
     
 def save_highscore(highscore):
     f = open(path + "/res/highscore.txt", "w")
@@ -250,7 +251,11 @@ def main():
 
                         if event.key == pygame.K_s:
                             shop_gui(screen, True, total_points)
-                               
+
+                        if event.key == pygame.K_m:
+                            main_menu()
+                            return
+
             if not game_over:
                 draw_dino(current_dino_frame)
                 if jump:
