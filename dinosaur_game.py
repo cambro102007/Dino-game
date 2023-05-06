@@ -1,8 +1,11 @@
 import pygame
 import random
 import os
+import math
 from shop_dino import shop_gui
 from main_menu import main_menu
+from shop_dino import purchased_boxes
+
 
 pygame.init()
 pygame.mixer.init()
@@ -28,6 +31,9 @@ dino_dead = pygame.image.load(path + '/res/images/man_dead_1.png')
 cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
 dino_img = pygame.image.load(path + '/res/images/man_running_1.png')
+background_img = pygame.image.load(path + '/res/images/background.png')
+
+background_width = background_img.get_width()
 
 scaled_dino_width, scaled_dino_height = 84, 120  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
@@ -118,7 +124,7 @@ def reset_game():
     cactus_x = WIDTH
     score = 0
     point_x = generate_point_position(cactus_x, scaled_cactus_width)
-
+    
 def draw_shop_button():
     font_button = pygame.font.Font(None, 36)
     text_button = font_button.render('Press S to Open Shop', True, BLACK)
@@ -148,8 +154,6 @@ def animate_dino(ct, lu, cd):
     if current_dino_frame >= len(dino_frames):
             current_dino_frame = 0        
 
-file_path = path + "/res/Perm_point.txt"
-
 def load_points(file_path):
     if file_exists(file_path):
         content = read_file(file_path)
@@ -168,7 +172,6 @@ def read_file(file_path):
     return content
 
 def save_points(file_path, points):
-    print("Saving points:", points)
     with open(file_path, 'w') as file:
         file.write(str(points))
 
@@ -198,23 +201,33 @@ def main():
     game_over = False
     random_speed = 6
     back_to_death_screen = False 
-    total_points = load_points(file_path)
-
-    background = pygame.Surface(screen.get_size())
-    background.fill(WHITE)
-     
+    scroll = 0
+    tiles = math.ceil(WIDTH / background_width) + 1
+    
     try:
         while main_menu() == True:
             pygame.display.set_caption('Dinosaur Game')
             clock.tick(120)
-            screen.fill(WHITE)
             current_time = pygame.time.get_ticks()
+            
+            if game_over == False:
+                for i in range(0, tiles):
+                    screen.blit(background_img, (i * background_width + scroll, -320))
+                scroll -= 5
+            else:
+                for i in range(0, tiles):
+                    screen.blit(background_img, (i * background_width + scroll, -320))
+                scroll -= 0
             
             draw_cactus()
             draw_point()
             draw_score()
             draw_high_score()
+            total_points = load_points(file_path)
+            
 
+            if abs(scroll) > background_width:
+                scroll = 0
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -222,8 +235,12 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and not jump or event.key == pygame.K_UP and not jump:
                         jump = True
-                        dino_vel_y = -20
-                    
+                        
+                        if purchased_boxes["Box 1"]:
+                            dino_vel_y = -23
+                        else:
+                            dino_vel_y = -20
+              
                     if game_over == True:
                         if event.key == pygame.K_SPACE:
                             reset_game()
@@ -234,7 +251,7 @@ def main():
 
                         if event.key == pygame.K_s:
                             shop_gui(screen, True, total_points)
-                            
+
                         if event.key == pygame.K_m:
                             main_menu()
                             return
@@ -283,9 +300,10 @@ def main():
             if dino_rect.colliderect(cactus_rect):
                 set_high_score(score)
                 game_over = True
-            elif dino_rect.colliderect(point_rect):
+            if dino_rect.colliderect(point_rect):
                 score += 1 
                 total_points += 1
+                save_points(file_path, total_points)
                 point_x = random.randint(WIDTH, WIDTH * 2)
 
     finally:
