@@ -32,6 +32,7 @@ cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
 dino_img = pygame.image.load(path + '/res/images/man_running_1.png')
 background_img = pygame.image.load(path + '/res/images/background.png')
+file_path = path + "/res/Perm_point.txt"
 
 background_width = background_img.get_width()
 
