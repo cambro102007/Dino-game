@@ -1,6 +1,7 @@
 import pygame
 import random
 import os
+import math
 from shop_dino import shop_gui
 from main_menu import main_menu
 from shop_dino import purchased_boxes
@@ -34,6 +35,9 @@ dino_dead = pygame.image.load(path + '/res/images/man_dead_1.png')
 cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
 dino_img = pygame.image.load(path + '/res/images/man_running_1.png')
+background_img = pygame.image.load(path + '/res/images/background.png')
+
+background_width = background_img.get_width()
 
 scaled_dino_width, scaled_dino_height = 84, 120  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
@@ -66,7 +70,7 @@ high_score_file.close()
 
 score = 0
 font = pygame.font.Font(None, 36)
-
+file_path = path + "/res/Perm_point.txt"
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
@@ -149,8 +153,6 @@ def animate_dino(ct, lu, cd):
     if current_dino_frame >= len(dino_frames):
             current_dino_frame = 0        
 
-file_path = path + "/res/Perm_point.txt"
-
 def load_points(file_path):
     if file_exists(file_path):
         content = read_file(file_path)
@@ -169,7 +171,6 @@ def read_file(file_path):
     return content
 
 def save_points(file_path, points):
-    print("Saving points:", points)
     with open(file_path, 'w') as file:
         file.write(str(points))
 
@@ -199,23 +200,28 @@ def main():
     game_over = False
     random_speed = 6
     back_to_death_screen = False 
-
-    background = pygame.Surface(screen.get_size())
-    background.fill(WHITE)
-     
+    scroll = 0
+    tiles = math.ceil(WIDTH / background_width) + 1
+    
     try:
         while main_menu() == True:
             pygame.display.set_caption('Dinosaur Game')
             clock.tick(120)
-            screen.fill(WHITE)
             current_time = pygame.time.get_ticks()
+            
+            for i in range(0, tiles):
+                screen.blit(background_img, (i * background_width + scroll, -320))
+            scroll -= 5
             
             draw_cactus()
             draw_point()
             draw_score()
             draw_high_score()
             total_points = load_points(file_path)
+            
 
+            if abs(scroll) > background_width:
+                scroll = 0
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -239,7 +245,9 @@ def main():
 
                         if event.key == pygame.K_s:
                             shop_gui(screen, True, total_points)
-                            
+            
+            pygame.display.update()
+                               
             if not game_over:
                 draw_dino(current_dino_frame)
                 if jump:
