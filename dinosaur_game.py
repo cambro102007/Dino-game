@@ -70,7 +70,7 @@ font = pygame.font.Font(None, 36)
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
-    text = font.render('', True, BLACK)
+    text = font.render('', True, WHITE)
     screen.blit(text, (dino_x, text_pos))
 
 def draw_dino(frame):
@@ -87,7 +87,7 @@ def draw_point():
     screen.blit(point_img, (point_x, point_y))
 
 def draw_score():
-    text = font.render(f'Score: {score}', True, BLACK)
+    text = font.render(f'Score: {score}', True, WHITE)
     screen.blit(text, (10, 10))
 
 def set_high_score(final_score):
@@ -100,9 +100,9 @@ def set_high_score(final_score):
 
 def draw_game_over(final_score):
     font_big = pygame.font.Font(None, 72)
-    text_game_over = font_big.render('You Died', True, BLACK)
-    text_final_score = font.render(f'Final Score: {final_score}', True, BLACK)
-    text_respawn = font.render('Press Space to Restart', True, BLACK)
+    text_game_over = font_big.render('You Died', True, WHITE)
+    text_final_score = font.render(f'Final Score: {final_score}', True, WHITE)
+    text_respawn = font.render('Press Space to Restart', True, WHITE)
 
     screen.blit(text_game_over, (WIDTH // 2 - text_game_over.get_width() // 2, HEIGHT // 3 - text_game_over.get_height() // 2))
     screen.blit(text_final_score, (WIDTH // 2 - text_final_score.get_width() // 2, HEIGHT // 2 - text_final_score.get_height() // 2))
@@ -111,7 +111,7 @@ def draw_game_over(final_score):
     draw_menu_button()
     
 def draw_high_score():
-    text = font.render(f'High Score: {high_score}', True, BLACK)
+    text = font.render(f'High Score: {high_score}', True, WHITE)
     screen.blit(text, (525, 10))
 
 def generate_point_position(cactus_x, cactus_width, min_distance=100):
@@ -128,12 +128,12 @@ def reset_game():
     
 def draw_shop_button():
     font_button = pygame.font.Font(None, 36)
-    text_button = font_button.render('Press S to Open Shop', True, BLACK)
+    text_button = font_button.render('Press S to Open Shop', True, WHITE)
     screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 70))
     
 def draw_menu_button():
     font_button = pygame.font.Font(None, 36)
-    text_button = font_button.render('Press M to go back to the Menu', True, BLACK)
+    text_button = font_button.render('Press M to go back to the Menu', True, WHITE)
     screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 109)) 
     
 def save_highscore(highscore):
