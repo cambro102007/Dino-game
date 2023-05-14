@@ -12,6 +12,10 @@ GREY = (180, 180, 180)
 
 path = os.path.dirname(os.path.abspath(__file__))
 
+def save_purchased_boxes(purchased_boxes):
+    with open('box_purchase.yaml', 'w') as f:
+        yaml.dump(purchased_boxes, f)
+
 def load_purchased_boxes():
     try:
         with open('box_purchase.yaml', 'r') as f:
@@ -24,10 +28,6 @@ def load_purchased_boxes():
     return purchased_boxes
 
 purchased_boxes = load_purchased_boxes()
-
-def save_purchased_boxes(purchased_boxes):
-    with open('box_purchase.yaml', 'w') as f:
-        yaml.dump(purchased_boxes, f)
 
 def save_Perm_point(Perm_point):
     f = open(path + "/res/Perm_point.txt", "w")
