@@ -48,6 +48,20 @@ jump = False
 cactus_x = WIDTH
 cactus_y = HEIGHT - cactus_img.get_height()
 
+def check_for_highscore():
+    highscore_file_exists = os.path.exists(path + '/res/highscore.txt')
+    if highscore_file_exists:
+        print('Loaded Highscore')
+    else:
+        print('Highscore File not found, attempting to create it...')
+        try:
+            mk = open(path + '/res/highscore.txt', 'x')
+            mk.close()
+            print('Created highscore file')
+        except:
+            print('There was an error creating the highscore file.')
+
+check_for_highscore()
 played_before = os.stat(path + "/res/highscore.txt")
 
 if played_before.st_size == 0:
