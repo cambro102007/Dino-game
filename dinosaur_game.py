@@ -1,6 +1,7 @@
 import pygame
 import random
 import os
+import math
 from shop_dino import shop_gui
 from main_menu import main_menu
 from shop_dino import purchased_boxes
@@ -18,10 +19,6 @@ GREY = (114, 114, 114)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 path = os.path.dirname(os.path.abspath(__file__))
 
-pygame.mixer.music.set_volume(0.05)
-pygame.mixer.music.load(path + '/res/sounds/Illegals in my Yard (animation).mp3')
-pygame.mixer.music.play(-1)
-
 dino_animation_cooldown = 100
 current_dino_frame = 0
 last_update = pygame.time.get_ticks()
@@ -34,6 +31,10 @@ dino_dead = pygame.image.load(path + '/res/images/man_dead_1.png')
 cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
 dino_img = pygame.image.load(path + '/res/images/man_running_1.png')
+background_img = pygame.image.load(path + '/res/images/background.png')
+file_path = path + "/res/Perm_point.txt"
+
+background_width = background_img.get_width()
 
 scaled_dino_width, scaled_dino_height = 84, 120  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
@@ -67,10 +68,9 @@ high_score_file.close()
 score = 0
 font = pygame.font.Font(None, 36)
 
-
 def draw_dino_nametag():
     text_pos = dino_y - 30
-    text = font.render('', True, BLACK)
+    text = font.render('', True, WHITE)
     screen.blit(text, (dino_x, text_pos))
 
 def draw_dino(frame):
@@ -87,7 +87,7 @@ def draw_point():
     screen.blit(point_img, (point_x, point_y))
 
 def draw_score():
-    text = font.render(f'Score: {score}', True, BLACK)
+    text = font.render(f'Score: {score}', True, WHITE)
     screen.blit(text, (10, 10))
 
 def set_high_score(final_score):
@@ -100,17 +100,18 @@ def set_high_score(final_score):
 
 def draw_game_over(final_score):
     font_big = pygame.font.Font(None, 72)
-    text_game_over = font_big.render('You Died', True, BLACK)
-    text_final_score = font.render(f'Final Score: {final_score}', True, BLACK)
-    text_respawn = font.render('Press Space to Restart', True, BLACK)
+    text_game_over = font_big.render('You Died', True, WHITE)
+    text_final_score = font.render(f'Final Score: {final_score}', True, WHITE)
+    text_respawn = font.render('Press Space to Restart', True, WHITE)
 
     screen.blit(text_game_over, (WIDTH // 2 - text_game_over.get_width() // 2, HEIGHT // 3 - text_game_over.get_height() // 2))
     screen.blit(text_final_score, (WIDTH // 2 - text_final_score.get_width() // 2, HEIGHT // 2 - text_final_score.get_height() // 2))
     screen.blit(text_respawn, (WIDTH // 2 - text_respawn.get_width() // 2, HEIGHT * 2 // 3 - text_respawn.get_height() // 2))
     draw_shop_button()
-
+    draw_menu_button()
+    
 def draw_high_score():
-    text = font.render(f'High Score: {high_score}', True, BLACK)
+    text = font.render(f'High Score: {high_score}', True, WHITE)
     screen.blit(text, (525, 10))
 
 def generate_point_position(cactus_x, cactus_width, min_distance=100):
@@ -127,8 +128,13 @@ def reset_game():
     
 def draw_shop_button():
     font_button = pygame.font.Font(None, 36)
-    text_button = font_button.render('Press S to Open Shop', True, BLACK)
-    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 60))
+    text_button = font_button.render('Press S to Open Shop', True, WHITE)
+    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 70))
+    
+def draw_menu_button():
+    font_button = pygame.font.Font(None, 36)
+    text_button = font_button.render('Press M to go back to the Menu', True, WHITE)
+    screen.blit(text_button, (WIDTH // 2 - text_button.get_width() // 2, HEIGHT - 109)) 
     
 def save_highscore(highscore):
     f = open(path + "/res/highscore.txt", "w")
@@ -149,8 +155,6 @@ def animate_dino(ct, lu, cd):
     if current_dino_frame >= len(dino_frames):
             current_dino_frame = 0        
 
-file_path = path + "/res/Perm_point.txt"
-
 def load_points(file_path):
     if file_exists(file_path):
         content = read_file(file_path)
@@ -169,7 +173,6 @@ def read_file(file_path):
     return content
 
 def save_points(file_path, points):
-    print("Saving points:", points)
     with open(file_path, 'w') as file:
         file.write(str(points))
 
@@ -199,23 +202,33 @@ def main():
     game_over = False
     random_speed = 6
     back_to_death_screen = False 
-
-    background = pygame.Surface(screen.get_size())
-    background.fill(WHITE)
-     
+    scroll = 0
+    tiles = math.ceil(WIDTH / background_width) + 1
+    
     try:
         while main_menu() == True:
             pygame.display.set_caption('Dinosaur Game')
             clock.tick(120)
-            screen.fill(WHITE)
             current_time = pygame.time.get_ticks()
+            
+            if game_over == False:
+                for i in range(0, tiles):
+                    screen.blit(background_img, (i * background_width + scroll, -320))
+                scroll -= 5
+            else:
+                for i in range(0, tiles):
+                    screen.blit(background_img, (i * background_width + scroll, -320))
+                scroll -= 0
             
             draw_cactus()
             draw_point()
             draw_score()
             draw_high_score()
             total_points = load_points(file_path)
+            
 
+            if abs(scroll) > background_width:
+                scroll = 0
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -239,7 +252,11 @@ def main():
 
                         if event.key == pygame.K_s:
                             shop_gui(screen, True, total_points)
-                            
+
+                        if event.key == pygame.K_m:
+                            main_menu()
+                            return
+
             if not game_over:
                 draw_dino(current_dino_frame)
                 if jump:
