@@ -23,6 +23,12 @@ dino_animation_cooldown = 100
 current_dino_frame = 0
 last_update = pygame.time.get_ticks()
 
+dino_frames = ['/res/images/man_running_1.png',
+                '/res/images/man_running_2.png',
+                '/res/images/man_running_3.png',
+                '/res/images/man_running_4.png']
+
+tophat_img = pygame.image.load(path + '/res/cosmetics/Red_Tophat.png')
 dino_dead = pygame.image.load(path + '/res/images/man_dead_1.png')
 cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
@@ -35,10 +41,13 @@ background_width = background_img.get_width()
 scaled_dino_width, scaled_dino_height = 84, 120  #Left is width & right is height
 scaled_cactus_width, scaled_cactus_height = 32, 96
 scaled_point_width, scaled_point_height = 64, 32
+scaled_tophat_width, scaled_tophat_height = 32, 80
 
 cactus_img = pygame.transform.scale(cactus_img, (scaled_cactus_width, scaled_cactus_height))
 point_img = pygame.transform.scale(point_img, (scaled_point_width, scaled_point_height))
+tophat_img = pygame.transform.scale(tophat_img, (scaled_tophat_width, scaled_tophat_height))
 dino_dead = pygame.transform.scale(dino_dead, (scaled_dino_width + 40, scaled_dino_height + 4))
+
 
 dino_x, dino_y = 50, HEIGHT - scaled_dino_height
 dino_vel_y = 0
@@ -64,16 +73,10 @@ high_score_file.close()
 score = 0
 font = pygame.font.Font(None, 36)
 
-    
-dino_frames = ['/res/images/man_running_1.png',
-                '/res/images/man_running_2.png',
-                '/res/images/man_running_3.png',
-                '/res/images/man_running_4.png']
-if purchased_boxes["Box 1"] == True:
-        dino_frames = ['/res/images/box1_man_running_1.png',
-            '/res/images/box1_man_running_2.png',
-            '/res/images/box1_man_running_3.png',
-            '/res/images/box1_man_running_4.png']
+def draw_tophat():
+    tophat_pos_x = dino_x + 32
+    tophat_pos_y = dino_y - 66
+    screen.blit(tophat_img, (tophat_pos_x, tophat_pos_y))
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
@@ -293,6 +296,10 @@ def main():
                     cooldown = 75
                 
                 animate_dino(current_time, last_update, cooldown)
+
+                if purchased_boxes["Box 1"]:
+                    draw_dino(current_dino_frame)
+                    draw_tophat()  
                 
             else:
                 draw_game_over(score)
