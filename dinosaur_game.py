@@ -51,6 +51,20 @@ jump = False
 cactus_x = WIDTH
 cactus_y = HEIGHT - cactus_img.get_height()
 
+def check_for_highscore():
+    highscore_file_exists = os.path.exists(path + '/res/highscore.txt')
+    if highscore_file_exists:
+        print('Loaded Highscore')
+    else:
+        print('Highscore File not found, attempting to create it...')
+        try:
+            mk = open(path + '/res/highscore.txt', 'x')
+            mk.close()
+            print('Created highscore file')
+        except:
+            print('There was an error creating the highscore file.')
+
+check_for_highscore()
 played_before = os.stat(path + "/res/highscore.txt")
 
 if played_before.st_size == 0:
@@ -102,7 +116,7 @@ def draw_game_over(final_score):
     font_big = pygame.font.Font(None, 72)
     text_game_over = font_big.render('You Died', True, WHITE)
     text_final_score = font.render(f'Final Score: {final_score}', True, WHITE)
-    text_respawn = font.render('Press Space to Restart', True, WHITE)
+    text_respawn = font.render('Press Jump to Restart', True, WHITE)
 
     screen.blit(text_game_over, (WIDTH // 2 - text_game_over.get_width() // 2, HEIGHT // 3 - text_game_over.get_height() // 2))
     screen.blit(text_final_score, (WIDTH // 2 - text_final_score.get_width() // 2, HEIGHT // 2 - text_final_score.get_height() // 2))
@@ -226,7 +240,6 @@ def main():
             draw_high_score()
             total_points = load_points(file_path)
             
-
             if abs(scroll) > background_width:
                 scroll = 0
             for event in pygame.event.get():
@@ -264,7 +277,6 @@ def main():
                     dino_vel_y += 1
                     if dino_y >= HEIGHT - transformed_img.get_height():
                         dino_y = HEIGHT - transformed_img.get_height()
-                        jump = False
 
                 if cactus_x < -cactus_img.get_width():
                     cactus_x = WIDTH
