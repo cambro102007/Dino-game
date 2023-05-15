@@ -277,6 +277,7 @@ def main():
                     dino_vel_y += 1
                     if dino_y >= HEIGHT - transformed_img.get_height():
                         dino_y = HEIGHT - transformed_img.get_height()
+                        jump = False
 
                 if cactus_x < -cactus_img.get_width():
                     cactus_x = WIDTH
