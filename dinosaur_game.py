@@ -256,7 +256,7 @@ def main():
                             dino_vel_y = -20
               
                     if game_over == True:
-                        if event.key == pygame.K_SPACE:
+                        if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                             reset_game()
                             game_over = False
                             dino_y = HEIGHT - scaled_dino_height
