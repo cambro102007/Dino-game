@@ -23,10 +23,6 @@ dino_animation_cooldown = 100
 current_dino_frame = 0
 last_update = pygame.time.get_ticks()
 
-dino_frames = ['/res/images/man_running_1.png',
-               '/res/images/man_running_2.png',
-               '/res/images/man_running_3.png',
-               '/res/images/man_running_4.png']
 dino_dead = pygame.image.load(path + '/res/images/man_dead_1.png')
 cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
@@ -67,6 +63,17 @@ high_score_file.close()
 
 score = 0
 font = pygame.font.Font(None, 36)
+
+    
+dino_frames = ['/res/images/man_running_1.png',
+                '/res/images/man_running_2.png',
+                '/res/images/man_running_3.png',
+                '/res/images/man_running_4.png']
+if purchased_boxes["Box 1"] == True:
+        dino_frames = ['/res/images/box1_man_running_1.png',
+            '/res/images/box1_man_running_2.png',
+            '/res/images/box1_man_running_3.png',
+            '/res/images/box1_man_running_4.png']
 
 def draw_dino_nametag():
     text_pos = dino_y - 30
@@ -144,7 +151,7 @@ def save_highscore(highscore):
 def draw_dead_dino():
     screen.blit(dino_dead, (dino_x, dino_y))
     text_pos = dino_y - 30
-    text = font.render('Dead ', True, BLACK)
+    text = font.render('Dead ', True, WHITE)
     screen.blit(text, (dino_x, text_pos))
     
 def animate_dino(ct, lu, cd):
@@ -210,7 +217,7 @@ def main():
             pygame.display.set_caption('Dinosaur Game')
             clock.tick(120)
             current_time = pygame.time.get_ticks()
-            
+        
             if game_over == False:
                 for i in range(0, tiles):
                     screen.blit(background_img, (i * background_width + scroll, -320))
@@ -255,7 +262,6 @@ def main():
 
                         if event.key == pygame.K_m:
                             main_menu()
-                            return
 
             if not game_over:
                 draw_dino(current_dino_frame)
