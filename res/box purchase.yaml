@@ -1,0 +1,6 @@
+import yaml
+
+purchased_boxes = {"Box 1": False, "Box 2": False, "Box 3": False, "Box 4": False, "Box 5": False, "Box 6": False}
+
+with open('box_purchase.yaml', 'w') as f:
+    yaml.dump(purchased_boxes, f)
