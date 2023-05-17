@@ -34,24 +34,19 @@ def save_Perm_point(Perm_point):
     f.write(Perm_point)
     f.close()
 
-def set_points():
-    global Perm_point
-    if purchased_boxes["Box 1"] == True:
-        Perm_point_file = open(path + "/res/Perm_point.txt", "r")
-        Perm_point = int(Perm_point_file.read().strip())
-        Perm_point_file.close()
-        Perm_point -= 500
-    
-        Perm_point_file = open(path + "/res/Perm_point.txt", "w")
-        Perm_point_file.write(str(Perm_point))
-        Perm_point_file.close()
-        
-
-    save_Perm_point(Perm_point.__str__())
-
-def shop_gui(screen, is_running, total_points=0):
+def shop_gui(screen, is_running):
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Dino Shop')
+    
+    def set_points(points_to_remove):
+        Perm_point_file = open(path + "/res/Perm_point.txt", "r+")
+        if purchased_boxes["Box 1"] == True:
+            points = int(Perm_point_file.read().strip())
+            points -= points_to_remove
+            Perm_point_file.write(str(points))
+            Perm_point_file.close()
+
+        save_Perm_point(points.__str__())
 
     font = pygame.font.Font(None, 36)
     exit_text = font.render('Click S to exit', True, BLACK)
@@ -75,14 +70,17 @@ def shop_gui(screen, is_running, total_points=0):
         boxes.append(box)
         box_rects.append(box_rect.copy())
 
-    def draw_total_points_shop():
-        text = font.render(f'Total Points: {total_points}', True, BLACK)
+    def draw_total_points_shop(points):
+        text = font.render(f'Total Points: {points}', True, BLACK)
         screen.blit(text, (WIDTH - text.get_width() - 10, 10))
 
     running = is_running
     back_to_death_screen = False
     
     while running:
+        perm_point_file = open(path + "/res/Perm_point.txt", "r+")
+        total_points = int(perm_point_file.read().strip())
+        perm_point_file.close()
         screen.fill(WHITE)
 
         screen.blit(exit_text, (WIDTH // 2 - exit_text.get_width() // 2, 10))
@@ -93,7 +91,6 @@ def shop_gui(screen, is_running, total_points=0):
         for i in range(1, 6):
             pygame.draw.line(screen, BLACK, (i * (box_width + 2) - 1, HEIGHT - box_height), (i * (box_width + 2) - 1, HEIGHT), 2)
 
-        draw_total_points_shop()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -110,7 +107,7 @@ def shop_gui(screen, is_running, total_points=0):
                         if i == 0 and not purchased_boxes.get("Box 1") and total_points >= 500:
                             purchased_boxes["Box 1"] = True
                             save_purchased_boxes(purchased_boxes)
-                            set_points()
+                            set_points(500)
                             box = pygame.Surface((box_width, box_height))
                             box.fill(GREY)
                             text = font.render('Purchased', True, BLACK)
@@ -119,6 +116,8 @@ def shop_gui(screen, is_running, total_points=0):
                         if i == 0:
                             continue
                 
+        draw_total_points_shop(total_points)
+        
         pygame.display.update()
 
     return back_to_death_screen, total_points

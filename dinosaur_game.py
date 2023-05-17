@@ -261,7 +261,7 @@ def main():
                             cactus_x = WIDTH
 
                         if event.key == pygame.K_s:
-                            shop_gui(screen, True, total_points)
+                            shop_gui(screen, True)
 
                         if event.key == pygame.K_m:
                             main_menu()

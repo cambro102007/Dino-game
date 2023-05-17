@@ -78,7 +78,7 @@ def main_menu():
                     is_running = False
                     
                 if event.ui_element == shop_button:
-                    shop_gui(window_surface, True, total_points)
+                    shop_gui(window_surface, True)
                                 
                 if event.ui_element == mute_button:
                     if not mute:
