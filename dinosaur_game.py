@@ -297,7 +297,7 @@ def main():
                 
                 animate_dino(current_time, last_update, cooldown)
 
-                if purchased_boxes["Box 1"]:
+                if purchased_boxes["Box 2"]:
                     draw_tophat()
                 
             else:

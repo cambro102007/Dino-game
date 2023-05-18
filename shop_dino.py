@@ -38,10 +38,10 @@ def shop_gui(screen, is_running):
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Dino Shop')
     
-    def set_points(points_to_remove):
+    def remove_points(points_to_remove):
         Perm_point_file = open(path + "/res/Perm_point.txt", "r+")
-        if purchased_boxes["Box 1"] == True:
-            points = int(Perm_point_file.read().strip())
+        points = int(Perm_point_file.read().strip())        
+        if purchased_boxes["Box 1"] == True or purchased_boxes["Box 2"] == True:
             points -= points_to_remove
             Perm_point_file.write(str(points))
             Perm_point_file.close()
@@ -52,7 +52,7 @@ def shop_gui(screen, is_running):
     exit_text = font.render('Click S to exit', True, BLACK)
 
     box_width, box_height = (WIDTH - 10) // 6, HEIGHT - 50
-    box_texts = ['500 points', 'Box 2', 'Box 3', 'Box 4', 'Box 5', 'Box 6']
+    box_texts = ['500 Points', '250 Points', 'Box 3', 'Box 4', 'Box 5', 'Box 6']
     boxes = []
     box_rects = []
     
@@ -61,6 +61,8 @@ def shop_gui(screen, is_running):
         box.fill(GREY)
         if i == 0 and purchased_boxes["Box 1"]:
             text = font.render('Purchased', True, BLACK)
+        elif i == 1 and purchased_boxes["Box 2"]:
+            text = font.render('Purchased', True, BLACK)           
         else:
             text = font.render(text, True, BLACK)
         box.blit(text, (box_width // 2 - text.get_width() // 2, box_height - text.get_height()))
@@ -107,14 +109,23 @@ def shop_gui(screen, is_running):
                         if i == 0 and not purchased_boxes.get("Box 1") and total_points >= 500:
                             purchased_boxes["Box 1"] = True
                             save_purchased_boxes(purchased_boxes)
-                            set_points(500)
+                            remove_points(500)
                             box = pygame.Surface((box_width, box_height))
                             box.fill(GREY)
                             text = font.render('Purchased', True, BLACK)
                             box.blit(text, (box_width // 2 - text.get_width() // 2, box_height - text.get_height()))
                             boxes[i] = box
-                        if i == 0:
-                            continue
+                        
+                        elif i == 1 and not purchased_boxes.get("Box 2") and total_points >= 250:
+                            purchased_boxes["Box 2"] = True
+                            save_purchased_boxes(purchased_boxes)
+                            remove_points(250)
+                            box = pygame.Surface((box_width, box_height))
+                            box.fill(GREY)
+                            text = font.render('Purchased', True, BLACK)
+                            box.blit(text, (box_width // 2 - text.get_width() // 2, box_height - text.get_height()))
+                            boxes[i] = box         
+                
                 
         draw_total_points_shop(total_points)
         
