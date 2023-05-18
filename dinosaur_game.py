@@ -277,8 +277,8 @@ def main():
 
                 if cactus_x < -cactus_img.get_width():
                     cactus_x = WIDTH
-                    score += 1
                     random_speed = random.randint(5, 12)
+                    score += 1
 
                 if point_x < -point_img.get_width():
                     point_x = generate_point_position(cactus_x, scaled_cactus_width)
@@ -299,7 +299,7 @@ def main():
 
                 if purchased_boxes["Box 2"]:
                     draw_tophat()
-                
+                8
             else:
                 draw_game_over(score)
                 draw_dead_dino()
@@ -316,6 +316,8 @@ def main():
             if dino_rect.colliderect(point_rect):
                 score += 1 
                 total_points += 1
+                if purchased_boxes["Box 3"]:
+                    total_points += 1
                 save_points(file_path, total_points)
                 point_x = random.randint(WIDTH, WIDTH * 2)
 
