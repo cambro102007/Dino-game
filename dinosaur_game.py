@@ -221,7 +221,7 @@ def main():
     
     try:
         while main_menu() == True:
-            pygame.display.set_caption('Dinosaur Game')
+            pygame.display.set_caption('Dino Game')
             clock.tick(120)
             current_time = pygame.time.get_ticks()
             
