@@ -27,9 +27,17 @@ dino_frames = ['/res/images/man_running_1.png',
                 '/res/images/man_running_2.png',
                 '/res/images/man_running_3.png',
                 '/res/images/man_running_4.png']
+if purchased_boxes["Box 4"]:
+    dino_frames = ['/res/images/crip_man_running_1.png',
+                '/res/images/crip_man_running_2.png',
+                '/res/images/crip_man_running_3.png',
+                '/res/images/crip_man_running_4.png']
+        
 
 tophat_img = pygame.image.load(path + '/res/cosmetics/Red_Tophat.png')
 dino_dead = pygame.image.load(path + '/res/images/man_dead_1.png')
+if purchased_boxes["Box 4"]:
+    dino_dead = pygame.image.load(path + '/res/images/crip_man_dead_1.png')
 cactus_img = pygame.image.load(path + '/res/images/cactus.png')
 point_img = pygame.image.load(path + '/res/images/point.png')
 dino_img = pygame.image.load(path + '/res/images/man_running_1.png')
@@ -72,6 +80,18 @@ high_score_file.close()
 
 score = 0
 font = pygame.font.Font(None, 36)
+
+def dino_pics():
+    global dino_frames
+    dino_frames = ['/res/images/man_running_1.png',
+                '/res/images/man_running_2.png',
+                '/res/images/man_running_3.png',
+                '/res/images/man_running_4.png']
+    if purchased_boxes["Box 4"]:
+        dino_frames = ['/res/images/crip_man_running_1.png',
+                    '/res/images/crip_man_running_2.png',
+                    '/res/images/crip_man_running_3.png',
+                    '/res/images/crip_man_running_4.png']
 
 def draw_tophat():
     tophat_pos_x = dino_x + 32
@@ -299,7 +319,6 @@ def main():
 
                 if purchased_boxes["Box 2"]:
                     draw_tophat()
-                8
             else:
                 draw_game_over(score)
                 draw_dead_dino()

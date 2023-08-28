@@ -41,7 +41,7 @@ def shop_gui(screen, is_running):
     def remove_points(points_to_remove):
         Perm_point_file = open(path + "/res/Perm_point.txt", "r+")
         points = int(Perm_point_file.read().strip())        
-        if purchased_boxes["Box 1"] == True or purchased_boxes["Box 2"] == True or purchased_boxes["Box 3"] == True:
+        if purchased_boxes["Box 1"] == True or purchased_boxes["Box 2"] == True or purchased_boxes["Box 3"] == True or purchased_boxes["Box 4"] == True:
             points -= points_to_remove
             Perm_point_file.write(str(points))
             Perm_point_file.close()
@@ -52,7 +52,7 @@ def shop_gui(screen, is_running):
     exit_text = font.render('Click S to exit', True, BLACK)
 
     box_width, box_height = (WIDTH - 10) // 4, HEIGHT - 50
-    box_texts = ['500 Points for +25% jump', '250 Points for TopHat', '1000 Points for 2x points', 'Box 4', 'Box 5', 'Box 6']
+    box_texts = ['500 Points for +25% jump', '250 Points for TopHat', '1000 Points for 2x points', 'CRIP! 1250 Points', 'Box 5', 'Box 6']
     boxes = []
     box_rects = []
     
@@ -64,7 +64,9 @@ def shop_gui(screen, is_running):
         elif i == 1 and purchased_boxes["Box 2"]:
             text = font.render('Purchased', True, BLACK)     
         elif i == 2 and purchased_boxes["Box 3"]:
-            text = font.render('Purchased', True, BLACK)      
+            text = font.render('Purchased', True, BLACK)
+        elif i == 3 and purchased_boxes["Box 4"]:
+            text = font.render('Purchased', True, BLACK)     
         else:
             text = font.render(text, True, BLACK)
         box.blit(text, (box_width // 2 - text.get_width() // 2, box_height - text.get_height()))
@@ -134,7 +136,16 @@ def shop_gui(screen, is_running):
                             box.fill(GREY)
                             text = font.render('Purchased', True, BLACK)
                             box.blit(text, (box_width // 2 - text.get_width() // 2, box_height - text.get_height()))
-                            boxes[i] = box                
+                            boxes[i] = box
+                        elif i == 3 and not purchased_boxes.get("Box 4") and total_points >= 1250:
+                            purchased_boxes["Box 4"] = True
+                            save_purchased_boxes(purchased_boxes)
+                            remove_points(1250)
+                            box = pygame.Surface((box_width, box_height))
+                            box.fill(GREY)
+                            text = font.render('Purchased', True, BLACK)
+                            box.blit(text, (box_width // 2 - text.get_width() // 2, box_height - text.get_height()))
+                            boxes[i] = box                             
                 
         draw_total_points_shop(total_points)
         
